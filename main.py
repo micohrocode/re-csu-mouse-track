@@ -1,4 +1,5 @@
 import cv2 as cv
+import numpy as np
 from tracker import Tracker
 
 '''
@@ -11,20 +12,21 @@ no bounding box as dwell time for clicks?
 mouse moves well up and down, but may drift if it reaches the end, stop with experimental walls?
 '''
 
+# video capure
 capture = cv.VideoCapture(0)
 
-# object detector
-object_detector = cv.createBackgroundSubtractorMOG2(history=100, varThreshold=40, detectShadows=False)
+l_b=np.array([10,100,20])# lower hsv bound for orange
+u_b=np.array([25,255,255])# upper hsv bound to orange
 
 while True:
     ret, frame = capture.read()
-    height, width = frame.shape[:2]
+    #height, width = frame.shape[:2]
     
-    # region of interest
-    roi = frame[:200,:300] 
+    # re color image to hsv for 
+    hsv=cv.cvtColor(frame,cv.COLOR_BGR2HSV)
+    # remove colors from image that are not in range
+    mask=cv.inRange(hsv,l_b,u_b)
     
-    # apply background subtraction mask to video
-    mask = object_detector.apply(roi)
     # clear out gray shadow values
     _, mask = cv.threshold(mask, 254, 255, cv.THRESH_BINARY)
     # find contours of mask
@@ -32,29 +34,22 @@ while True:
     # bounding boxes found
     detections = []
     
-    tracker = Tracker()
-    
     for cnt in contours:
         # calc area and remove unneeded elements
         area = cv.contourArea(cnt)
         if area > 50:
-            #cv.drawContours(roi,[cnt],-1,(0,255,0),2)
             # rect from contour
             x,y,w,h = cv.boundingRect(cnt)
-            cv.rectangle(roi,(x,y),(x+w,y+h),(0,255,0),3)
+            cv.rectangle(frame,(x,y),(x+w,y+h),(0,255,0),3)
             # center top point of box
-            cv.circle(roi,(int(x+w/2),y),3,(0,0,255),3)
+            cv.circle(frame,(int(x+w/2),y),3,(0,0,255),3)
             detections.append([x,y,w,h])
-            print(detections)
     
-    # check for detections
-    if detections:
-        tracker.update(detections,roi,width)
+
     cv.imshow("Camera", frame)
     cv.imshow("Mask", mask)
-    cv.imshow("Roi", roi)
     
-    if cv.waitKey(20) & 0xFF==ord('d'):
+    if cv.waitKey(20) & 0xFF==ord('q'):
         break
     
 capture.release()
