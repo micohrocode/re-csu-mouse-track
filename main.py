@@ -2,16 +2,6 @@ import cv2 as cv
 import numpy as np
 from tracker import Tracker
 
-'''
-TODO/IDEAS:
-create class to keep id of boxes that are moving?
-keep track of highest box's highest point, even if box disapears, select the next highest box?
-mouse movent can update as highest box updates
-improve detection, remove hand issues for too many boxes problem?
-no bounding box as dwell time for clicks?
-mouse moves well up and down, but may drift if it reaches the end, stop with experimental walls?
-'''
-
 # video capure
 capture = cv.VideoCapture(0)
 
@@ -20,7 +10,6 @@ u_b=np.array([25,255,255])# upper hsv bound to orange
 
 while True:
     ret, frame = capture.read()
-    #height, width = frame.shape[:2]
     
     # re color image to hsv for 
     hsv=cv.cvtColor(frame,cv.COLOR_BGR2HSV)
