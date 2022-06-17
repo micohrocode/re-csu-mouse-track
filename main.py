@@ -4,7 +4,7 @@ import win32api, win32con, ctypes
 from datetime import datetime
 import pyautogui
 import math   
-smooth = 2;
+smooth = 2
 prevX, prevY = 0, 0
 curX, curY = 0, 0 
 # video capure
