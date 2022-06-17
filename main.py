@@ -101,17 +101,14 @@ while True:
             status = "still"
             
     if status == "still" and not click_timer:
-        print("here")
         click_timer = datetime.now()
         
     if status == "still" and (datetime.now()-click_timer).seconds >= 3:
         win32api.mouse_event(win32con.MOUSEEVENTF_LEFTDOWN,x,y,0,0)
         win32api.mouse_event(win32con.MOUSEEVENTF_LEFTUP,x,y,0,0)
-        print("click")
         click_timer = None
         
     if status == "moving":
-        print("moved")
         click_timer = None
     
     # move mouse to top of tracked color
@@ -122,7 +119,6 @@ while True:
     
     if cv.waitKey(20) & 0xFF==ord('p'):
         break
-    
-print(movements)
+
 capture.release()
 cv.destroyAllWindows()
