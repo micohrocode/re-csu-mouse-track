@@ -1,9 +1,10 @@
 import cv2 as cv
 import numpy as np
-import win32api, win32con, ctypes
+import win32api, ctypes
 from datetime import datetime
 import pyautogui
-import math   
+import math
+
 smooth = 2
 prevX, prevY = 0, 0
 curX, curY = 0, 0 
@@ -31,9 +32,10 @@ click_timer = None
 while True:
     ret, frame = capture.read()
     
-    # resize frame to size of monitor
+    # resize frame to size of monitor and flips image
     frame = cv.resize(frame, (win32api.GetSystemMetrics(0),win32api.GetSystemMetrics(1)), interpolation = cv.INTER_AREA)
     frame = cv.flip(frame,1)
+  
     #constructs the foreground mask
     hsv=cv.cvtColor(frame,cv.COLOR_BGR2HSV)
     mask=cv.inRange(hsv,l_b,u_b)
@@ -54,7 +56,7 @@ while True:
     # Draw the bounding box
     cnt = contours[max_index]
     x,y,w,h = cv.boundingRect(cnt)
-    cv.rectangle(frame,(x,y),(x+w,y+h),(0,255,0),3)
+    #cv.rectangle(frame,(x,y),(x+w,y+h),(0,255,0),3)
         
     #draws circle on top of the point (index finger)
     x2 = x + int(w/2)
@@ -112,14 +114,15 @@ while True:
         
     if status == "moving":
         click_timer = None
-    
-    # move mouse to top of tracked color and smooths cursor
+  
+    # smooths cursor
     curX = int(prevX + (x2-prevX)/smooth)
-    curY = int(curY + (y-prevY)/smooth)
+    curY = int(curY + ((y+30)-prevY)/smooth)
     prevX = curX
     prevY = curY
+
     
-    ctypes.windll.user32.SetCursorPos(curX, curY+30)  
+    ctypes.windll.user32.SetCursorPos(curX, curY)  
     cv.imshow("Camera", frame)
     #cv.imshow("Mask", mask)
     
