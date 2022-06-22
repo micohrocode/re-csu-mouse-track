@@ -4,14 +4,15 @@ import win32api, ctypes
 from datetime import datetime
 import pyautogui
 import math
+import matplotlib.pyplot as plt
 
 smooth = 2
 prevX, prevY = 0, 0
 curX, curY = 0, 0 
 # video capure
 capture = cv.VideoCapture(0)
-l_b=np.array([10,100,20])# lower hsv bound for orange
-u_b=np.array([25,255,255])# upper hsv bound to orange
+l_b=np.array([0,100,20])# lower hsv bound for orange
+u_b=np.array([10,255,255])# upper hsv bound to orange
 
 # TESTING MOVEMENT DETECTION THRESHOLD
 # check for movement
@@ -21,13 +22,18 @@ start = None
 end = None
 # if currently moving
 status = None
-# all movements captured
+# all total movements captured
 movements = []
+# portions of movement
+move_portions = []
 # start and end time of current movement
 start_time = None
 end_time = None
 # click sleep time check
 click_timer = None
+
+# create plots
+fig, ax1 = plt.subplots()
 
 while True:
     ret, frame = capture.read()
@@ -72,6 +78,9 @@ while True:
             # if moving in x direction
             frame = cv.putText(frame, 'Moving', (x,y), cv.FONT_HERSHEY_TRIPLEX, 
                     1, (0,255,0), 2)
+            # get update point of movement and time since start
+            if start_time:
+                move_portions.append([x2,y,(datetime.now() - start_time)])
             prev = (x2,y)
             
             # if it was still start a movement
@@ -84,6 +93,9 @@ while True:
             # if moving in the y direction
             frame = cv.putText(frame, 'Moving', (x,y), cv.FONT_HERSHEY_TRIPLEX, 
                     1, (0,255,0), 2)
+            # get update point of movement and time since start
+            if start_time:
+                move_portions.append([x2,y,(datetime.now() - start_time)])
             prev = (x2,y)
             
             # if it was still start a movement
@@ -101,7 +113,9 @@ while True:
             if status == "moving":
                 end = (x2,y)
                 end_time = datetime.now()
-                movements.append([start,end,math.dist(start, end),(end_time - start_time).microseconds])
+                movements.append([start,end,math.dist(start, end),(end_time - start_time),move_portions])
+                move_portions = []
+                start_time = None
             
             status = "still"
             
@@ -124,10 +138,25 @@ while True:
     
     ctypes.windll.user32.SetCursorPos(curX, curY)  
     cv.imshow("Camera", frame)
+    cv.setWindowProperty("Camera", cv.WND_PROP_TOPMOST, 1)
     #cv.imshow("Mask", mask)
+    
+    for x in range(len(movements)):
+        # start point to end point line
+        x1, y1 = [movements[x][0][0], movements[x][1][0]], [movements[x][0][1], movements[x][1][1]]
+        plt.plot(x1, y1, marker = 'o', label= f"line {x} {movements[x][3]}")
+        
+        # parts of the main move from start to end
+        print(movements[x][3].seconds,movements[x][3].microseconds)
+        print(([z[2] for z in movements[x][4]]))
+        for y in range(len(movements[x][4])):
+            plt.plot(movements[x][4][y][0], movements[x][4][y][1], marker = 'o',color='k')
     
     if cv.waitKey(20) & 0xFF==ord('p'):
         break
-
+    
+# show line order with legen
+#plt.legend(loc='center left', bbox_to_anchor=(1, 0.5))
+ax1.invert_yaxis()
 capture.release()
 cv.destroyAllWindows()   
