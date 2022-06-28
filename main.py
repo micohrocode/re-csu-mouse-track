@@ -24,6 +24,8 @@ def maxContour(mask):
     cnt = contours[max_index]
     x,y,w,h = cv.boundingRect(cnt)
     
+    print(x,y,w,h)
+    
     return (x,y,w,h)
 
 def frameToColorMask(frame):
@@ -72,21 +74,31 @@ fig, ax1 = plt.subplots()
 
 
 ok, frame = capture.read()
-
 frame,mask = frameToColorMask(frame)
 (x,y,w,h) = maxContour(mask)
+
+tracker = cv.TrackerMIL_create()
+
 bbox = (x,y,w,h)
 print('first'+str(bbox))
+
+ok = tracker.init(frame, bbox)
 
 while True:
     ret, frame = capture.read()
     
     frame,mask = frameToColorMask(frame)
     
+    # Update tracker
+    ok, bbox = tracker.update(frame)
+    
+    (x,y,w,h) = bbox
+    print(x,y,w,h)
+    
     # TRACKING FIXES?
-    (x,y,w,h) = maxContour(mask)
-    bbox = (x,y,w,h)
-    print(bbox)  
+    # (x,y,w,h) = maxContour(mask)
+    # bbox = (x,y,w,h)
+    # print(bbox)  
       
     #draws circle on top of the point (index finger)
     x2 = x + int(w/2)
