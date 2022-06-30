@@ -97,6 +97,8 @@ while not pixelToMM:
     _, frame=video.read()
     pixelToMM = calibrate(frame, 76.2)
     
+print('Pixels per mm: '+ str(pixelToMM))
+    
 time.sleep(5)
 
 while True:
@@ -182,7 +184,7 @@ while True:
                 if status == "moving":
                     end = (x2,y)
                     end_time = datetime.now()
-                    movements.append([start,end,math.dist(start, end),(end_time - start_time),move_portions,start_time.microsecond, math.dist(start, end)/pixelToMM])
+                    movements.append([start,end,math.dist(start, end),(end_time - start_time),move_portions,start_time, math.dist(start, end)/pixelToMM])
                     move_portions = []
                     start_time = None
                 
@@ -203,8 +205,18 @@ for x in range(len(movements)):
     
     # plot move portions for each movement
     for y in range(len(movements[x][4])):
+        if y == 0:
+            # velocity
+            velocity = (math.dist((movements[x][4][y][0],movements[x][4][y][1]),start))/(movements[x][4][y][2].microseconds*0.000001) / pixelToMM
+            movements[x][4][y].append(velocity)
+        else:
+            # velocity
+            velocity = (math.dist((movements[x][4][y][0],movements[x][4][y][1]),(movements[x][4][y-1][0],movements[x][4][y-1][1])))/(movements[x][4][y][2].microseconds*0.000001) / pixelToMM
+            movements[x][4][y].append(velocity)
+            # acceleration
+            accerlation = ((velocity - movements[x][4][y-1][3])/(movements[x][4][y][2].microseconds*0.000001))
+            movements[x][4][y].append(accerlation)
         plt.plot(movements[x][4][y][0], movements[x][4][y][1], marker = 'o',color='k')
-
 # move order as plotted legend
 plt.legend(loc='center left', bbox_to_anchor=(1, 0.5))
 ax1.invert_yaxis()
