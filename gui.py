@@ -8,12 +8,13 @@ root.geometry("640x480")
 
 # function to get slide value
 def print_val():
-    main(horizontal.get(), horizontal2.get())
+    main(horizontal.get(), horizontal2.get(),root)
     
 # get radio button selection
 def sel():
    selection = "You selected the option " + str(var.get())
    label.config(text = selection)
+
 # string var to update
 var = StringVar()
 var.set('hello')
@@ -22,11 +23,11 @@ varDub = DoubleVar()
 varDub.set(0.00)
 
 # slider
-horizontal = Scale(root,from_=0, to=180,resolution=5,orient=HORIZONTAL,digits=3)
+horizontal = Scale(root,from_=85, to=95,resolution=5,orient=HORIZONTAL,digits=3)
 horizontal.pack()
 
 # slider
-horizontal2 = Scale(root,from_=0, to=180,resolution=5,orient=HORIZONTAL,digits=3)
+horizontal2 = Scale(root,from_=85, to=95,resolution=5,orient=HORIZONTAL,digits=3)
 horizontal2.pack()
 
 submit = Button(root, text ="Submit", command = print_val)
