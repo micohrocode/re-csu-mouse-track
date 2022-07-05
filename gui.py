@@ -10,7 +10,7 @@ root.geometry("640x480")
 def print_val():
     x = int(horizontal.get())
     y = int(horizontal2.get())
-    main(x,y)
+    main(x,y,root)
 
 l1 = Label(root, text = "Lower Bound:")
 l2 = Label(root, text = "Upper Bound:")

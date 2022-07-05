@@ -58,9 +58,11 @@ def calibrate(frame,sizeMM,l_b,u_b):
 
 def main(sval1,sval2,my_w):
     my_w_child=Toplevel(my_w) # Child window 
-    my_w_child.geometry("640x480")  # Size of the window 
-    my_w_child.title("new window test")
-    myCanvas = Canvas(my_w_child)
+    window_width = 640 * 2
+    window_height = 480 * 2
+    my_w_child.geometry(str(window_width)+"x"+str(window_height))  # Size of the window 
+    my_w_child.title("Cursor Test")
+    myCanvas = Canvas(my_w_child,height=window_height,width=window_width)
     myCanvas.pack()
     
     l_b=np.array([sval1,0,20])# lower hsv bound for orange
@@ -159,10 +161,10 @@ def main(sval1,sval2,my_w):
             
             myCanvas.delete(ALL)
             r = 10
-            x0 = x2 - r
-            y0 = y - r
-            x1 = x2 + r
-            y1 = y + r
+            x0 = ((x2/640)*window_width) - r
+            y0 = ((y/480)*window_width) - r
+            x1 = ((x2/640)*window_width) + r
+            y1 = ((y/480)*window_width) + r
             myCanvas.create_oval(x0, y0, x1, y1)
             
             my_w_child.update()
