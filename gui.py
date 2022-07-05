@@ -8,54 +8,26 @@ root.geometry("640x480")
 
 # function to get slide value
 def print_val():
-    main(horizontal.get(), horizontal2.get())
-    
-# get radio button selection
-def sel():
-   selection = "You selected the option " + str(var.get())
-   label.config(text = selection)
-# string var to update
-var = StringVar()
-var.set('hello')
+    x = int(horizontal.get())
+    y = int(horizontal2.get())
+    main(x,y)
 
-varDub = DoubleVar()
-varDub.set(0.00)
+l1 = Label(root, text = "Lower Bound:")
+l2 = Label(root, text = "Upper Bound:")
+ 
+l1.grid(row = 0, column = 0, sticky = W, pady = 2)
+l2.grid(row = 1, column = 0, sticky = W, pady = 2)
+ 
+horizontal = Entry(root)
+horizontal2 = Entry(root)
+ 
 
-# slider
-horizontal = Scale(root,from_=0, to=180,resolution=5,orient=HORIZONTAL,digits=3)
-horizontal.pack()
-
-# slider
-horizontal2 = Scale(root,from_=0, to=180,resolution=5,orient=HORIZONTAL,digits=3)
-horizontal2.pack()
+horizontal.grid(row = 0, column = 1, pady = 2)
+horizontal2.grid(row = 1, column = 1, pady = 2)
+ 
 
 submit = Button(root, text ="Submit", command = print_val)
-submit.pack()
+submit.grid(row = 2, column = 1, pady = 2)
 
-# label
-l = Label(root, textvariable = var)
-l.pack()
-
-# text entry
-t = Entry(root, textvariable = var)
-t.pack()
-
-# int var to update
-var = IntVar()
-# button 1 
-R1 = Radiobutton(root, text="Option 1", variable=var, value=1,
-                  command=sel)
-R1.pack( anchor = W )
-# button 2
-R2 = Radiobutton(root, text="Option 2", variable=var, value=2,
-                  command=sel)
-R2.pack( anchor = W )
-# button 3
-R3 = Radiobutton(root, text="Option 3", variable=var, value=3,
-                  command=sel)
-R3.pack( anchor = W)
-# radio button selection label
-label = Label(root)
-label.pack()
 
 root.mainloop()
