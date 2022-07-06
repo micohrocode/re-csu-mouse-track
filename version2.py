@@ -61,8 +61,9 @@ def calibrate(frame,sizeMM,l_b,u_b):
    
     return pixelPerMM
 
-def main(sval1,sval2,my_w,name):
+def main(sval1,sval2,my_w,name, rectW):
     my_w_child=Toplevel(my_w) # Child window 
+    
     window_width = 640 * 2
     window_height = 480 * 2
     my_w_child.geometry(str(window_width)+"x"+str(window_height))  # Size of the window 
