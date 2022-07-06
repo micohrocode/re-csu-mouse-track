@@ -11,6 +11,11 @@ from tkinter import *
 
 workbook = xlsxwriter.Workbook("data.xlsx")
 outSheet = workbook.add_worksheet()
+
+def pidInfo(name,place):
+    outSheet.write(place+1, 0, "Name:")
+    outSheet.write(place+1, 1, name)
+
 def frameToColorMask(frame,l_b,u_b):
     #constructs the foreground mask from color values
     hsv=cv2.cvtColor(frame,cv2.COLOR_BGR2HSV)
@@ -56,7 +61,7 @@ def calibrate(frame,sizeMM,l_b,u_b):
    
     return pixelPerMM
 
-def main(sval1,sval2,my_w):
+def main(sval1,sval2,my_w,name):
     my_w_child=Toplevel(my_w) # Child window 
     window_width = 640 * 2
     window_height = 480 * 2
@@ -64,6 +69,8 @@ def main(sval1,sval2,my_w):
     my_w_child.title("Cursor Test")
     myCanvas = Canvas(my_w_child,height=window_height,width=window_width)
     myCanvas.pack()
+    
+    
     
     l_b=np.array([sval1,0,20])# lower hsv bound for orange
     u_b=np.array([sval2,255,255])# upper hsv bound to orange
@@ -154,18 +161,36 @@ def main(sval1,sval2,my_w):
             x2 = x + int(w/2)
             cv2.circle(frame,(x2,y),4,(0,0,255),-1)
             
-            
-            # PERCENTAGE TO TRANSLATE TO USER VIEW OUTPUT
-            print(x2/640)
-            print(y/480)
-            
             myCanvas.delete(ALL)
+            # PERCENTAGE TO TRANSLATE TO USER VIEW OUTPUT
+            # test rectangle
+            window_center_x = window_width / 2
+            window_center_y = window_height / 2
+            
+            rectangle = myCanvas.create_rectangle(
+            int(window_center_x +(window_width*.25)), 
+            int(window_center_y +(window_height*.40)), 
+            int(window_center_x +(window_width*.35)), 
+            int(window_center_y -(window_height*.40)),
+            outline="#fb0",
+            fill="#fb0")
+            
             r = 10
             x0 = ((x2/640)*window_width) - r
             y0 = ((y/480)*window_width) - r
             x1 = ((x2/640)*window_width) + r
             y1 = ((y/480)*window_width) + r
             myCanvas.create_oval(x0, y0, x1, y1)
+            
+            # collision detection
+            coll = myCanvas.find_overlapping(
+                int(window_center_x +(window_width*.25)), 
+                int(window_center_y +(window_height*.40)), 
+                int(window_center_x +(window_width*.35)), 
+                int(window_center_y -(window_height*.40)))
+            coll = list(coll)
+            if len(coll) >= 2:
+                myCanvas.itemconfig(rectangle, fill='green')
             
             my_w_child.update()
             
@@ -219,9 +244,9 @@ def main(sval1,sval2,my_w):
                         start_time = None
                    
                     status = "still"
-            outSheet.write(cell, 0, x2)
-            outSheet.write(cell, 1, y)
-            cell = cell + 1
+            # outSheet.write(cell, 0, x2)
+            # outSheet.write(cell, 1, y)
+            # cell = cell + 1
         else:
             cv2.putText(frame,'Error',(100,100),cv2.FONT_HERSHEY_SIMPLEX,1,(0,0,255),2)
         cv2.imshow('Tracking',frame)
@@ -250,8 +275,31 @@ def main(sval1,sval2,my_w):
                 movements[x][4][y].append(accerlation)
             plt.plot(movements[x][4][y][0], movements[x][4][y][1], marker = 'o',color='k')
       
+    # excel sheet organization
+    outSheet.write("A1","Start")
+    outSheet.write("B1","End") 
+    outSheet.write("C1","Distance")
+    outSheet.write("D1","Total Time") 
+    outSheet.write("E1","Moves")
+    outSheet.write("F1","Time Of")
+    outSheet.write("G1","MM Traveled")
+    
+    excel_place = 0
+    
     # look at how to display movement data
-    print(movements)
+    for i in range(len(movements)):
+        outSheet.write(i+1,0,str(movements[i][0]))
+        outSheet.write(i+1,1,str(movements[i][1]))
+        outSheet.write(i+1,2,str(movements[i][2]))
+        outSheet.write(i+1,3,str(movements[i][3]))
+        outSheet.write(i+1,4,str(movements[i][4]))
+        outSheet.write(i+1,5,str(movements[i][5]))
+        outSheet.write(i+1,6,str(movements[i][6]))
+        excel_place = excel_place + 1
+    
+    pidInfo(name,excel_place)
+    
+        
     # move order as plotted legend
     plt.legend(loc='center left', bbox_to_anchor=(1, 0.5))
     ax1.invert_yaxis()
