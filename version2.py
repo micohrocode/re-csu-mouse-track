@@ -78,7 +78,16 @@ def draw_rectangle(canvas,x_center,y_center,window_w,window_h,amplitude,thicknes
         int(y_center -(window_h*height)),
         outline="#fb0",
         fill="#fb0")
-        
+   
+def cursor_collision(canvas,coords,active,target):
+    coll = canvas.find_overlapping(coords[0],
+                         coords[1], 
+                         coords[2], 
+                         coords[3])
+    
+    coll = list(coll)
+    if len(coll) >= active:
+        canvas.itemconfig(target, fill='green')
 
 def main(sval1,sval2,my_w,name, rectW):
     my_w_child=Toplevel(my_w) # Child window 
@@ -192,13 +201,12 @@ def main(sval1,sval2,my_w,name, rectW):
             rectangle1 = draw_rectangle(myCanvas, window_center_x, window_center_y, window_width, window_height, .25, .10, .40, 'right')
             rectangle2 = draw_rectangle(myCanvas, window_center_x, window_center_y, window_width, window_height, .25, .10, .40, 'left')
             
-            print(myCanvas.coords(rectangle1))
-            
-            # center target of rectangle
-            target = myCanvas.create_oval(int(window_center_x +(window_width*.25)),
+            # center target
+            target = myCanvas.create_rectangle(int(window_center_x +(window_width*.25)),
                                  int(window_center_y +(window_height*.05)), 
                                  int(window_center_x +(window_width*.35)), 
                                  int(window_center_y -(window_height*.05)),
+                                 outline="#fb0",
                                  fill="#fb0")
             
             # cursor updating/drawing
@@ -210,14 +218,7 @@ def main(sval1,sval2,my_w,name, rectW):
             myCanvas.create_oval(x0, y0, x1, y1)
             
             # collision detection
-            coll = myCanvas.find_overlapping(int(window_center_x +(window_width*.25)),
-                                 int(window_center_y +(window_height*.05)), 
-                                 int(window_center_x +(window_width*.35)), 
-                                 int(window_center_y -(window_height*.05)))
-            coll = list(coll)
-            if len(coll) >= 3:
-                myCanvas.itemconfig(target, fill='green')
-            
+            cursor_collision(myCanvas,myCanvas.coords(target),3,target)
             my_w_child.update()
             
             # movement checks/data
