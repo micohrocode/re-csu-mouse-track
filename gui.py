@@ -5,9 +5,10 @@ from PIL import Image, ImageTk
 root = Tk()
 root.title('Testing GUI')
 
-height = win32api.GetSystemMetrics(1)
-width = win32api.GetSystemMetrics(0)
-root.geometry(str(width) +  "x" + str(height))
+# height = win32api.GetSystemMetrics(1)
+# width = win32api.GetSystemMetrics(0)
+# root.geometry(str(width) +  "x" + str(height))
+root.geometry("640x480")
 # function to get slide value
 def print_val():
     x = int(horizontal.get())
@@ -15,9 +16,6 @@ def print_val():
     partcipantName = pidEntry.get()
     rectWidth = var.get() #1 = thin, #2= medium, #3 = thick
     main(x,y, root, partcipantName, rectWidth)
-
-   
-
 
 hsv = Image.open("hsv.png")
 test = hsv.resize((600, 300))

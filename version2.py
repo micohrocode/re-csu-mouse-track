@@ -61,6 +61,25 @@ def calibrate(frame,sizeMM,l_b,u_b):
    
     return pixelPerMM
 
+def draw_rectangle(canvas,x_center,y_center,window_w,window_h,amplitude,thickness,height,side):
+    if side == 'right':
+        return canvas.create_rectangle(
+        int(x_center +(window_w*amplitude)), 
+        int(y_center +(window_h*height)), 
+        int(x_center +(window_w*(amplitude+thickness))), 
+        int(y_center -(window_h*height)),
+        outline="#fb0",
+        fill="#fb0")
+    elif side == 'left':
+        return canvas.create_rectangle(
+        int(x_center -(window_w*(amplitude+thickness))), 
+        int(y_center +(window_h*height)), 
+        int(x_center -(window_w*amplitude)), 
+        int(y_center -(window_h*height)),
+        outline="#fb0",
+        fill="#fb0")
+        
+
 def main(sval1,sval2,my_w,name, rectW):
     my_w_child=Toplevel(my_w) # Child window 
     
@@ -162,20 +181,27 @@ def main(sval1,sval2,my_w,name, rectW):
             x2 = x + int(w/2)
             cv2.circle(frame,(x2,y),4,(0,0,255),-1)
             
+            # clear canvas for updating
             myCanvas.delete(ALL)
-            # PERCENTAGE TO TRANSLATE TO USER VIEW OUTPUT
-            # test rectangle
+            
+            # find center point
             window_center_x = window_width / 2
             window_center_y = window_height / 2
             
-            rectangle = myCanvas.create_rectangle(
-            int(window_center_x +(window_width*.25)), 
-            int(window_center_y +(window_height*.40)), 
-            int(window_center_x +(window_width*.35)), 
-            int(window_center_y -(window_height*.40)),
-            outline="#fb0",
-            fill="#fb0")
+            # rectangle area drawing
+            rectangle1 = draw_rectangle(myCanvas, window_center_x, window_center_y, window_width, window_height, .25, .10, .40, 'right')
+            rectangle2 = draw_rectangle(myCanvas, window_center_x, window_center_y, window_width, window_height, .25, .10, .40, 'left')
             
+            print(myCanvas.coords(rectangle1))
+            
+            # center target of rectangle
+            target = myCanvas.create_oval(int(window_center_x +(window_width*.25)),
+                                 int(window_center_y +(window_height*.05)), 
+                                 int(window_center_x +(window_width*.35)), 
+                                 int(window_center_y -(window_height*.05)),
+                                 fill="#fb0")
+            
+            # cursor updating/drawing
             r = 10
             x0 = ((x2/640)*window_width) - r
             y0 = ((y/480)*window_width) - r
@@ -184,14 +210,13 @@ def main(sval1,sval2,my_w,name, rectW):
             myCanvas.create_oval(x0, y0, x1, y1)
             
             # collision detection
-            coll = myCanvas.find_overlapping(
-                int(window_center_x +(window_width*.25)), 
-                int(window_center_y +(window_height*.40)), 
-                int(window_center_x +(window_width*.35)), 
-                int(window_center_y -(window_height*.40)))
+            coll = myCanvas.find_overlapping(int(window_center_x +(window_width*.25)),
+                                 int(window_center_y +(window_height*.05)), 
+                                 int(window_center_x +(window_width*.35)), 
+                                 int(window_center_y -(window_height*.05)))
             coll = list(coll)
-            if len(coll) >= 2:
-                myCanvas.itemconfig(rectangle, fill='green')
+            if len(coll) >= 3:
+                myCanvas.itemconfig(target, fill='green')
             
             my_w_child.update()
             
