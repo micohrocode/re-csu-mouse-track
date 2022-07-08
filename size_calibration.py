@@ -1,48 +1,29 @@
 from tkinter import *
-x = True
-def ret():
-    global x
-    x = False
-def grow(line_length):
-    line_length.set(line_length.get()+1)
 
-def shrink(line_length):
-    line_length.set(line_length.get()-1)
+sl_value = 10
 
+
+   
 def calibrate_size(my_w):
-    print("here")
-    line_length = IntVar(master=my_w, value=200)
-    
-    my_w_child=Toplevel(my_w) # Child window 
-    
-    window_width = 640 * 2
-    window_height = 480 * 2
-    my_w_child.geometry(str(window_width)+"x"+str(window_height))  # Size of the window 
-    submit = Button(my_w_child, text ="Submit", command = ret)
+    length = IntVar(my_w, 10)
+   
+    my_w_child=Toplevel(my_w) # Child window  
+    window_width = 1000
+    window_height = 1000
+    my_w_child.geometry(str(window_width)+"x"+str(window_height))  # Size of the window
+    canvas = Canvas(my_w_child,height=500,width=500)
+    canvas.pack()
+   
+    slider = Scale(my_w_child, from_=10 , to=150, orient = HORIZONTAL, bg="blue", length = 800,variable=length)
+    slider.pack()
+    submit = Button(my_w_child, text ="Submit")
     submit.pack()
     my_w_child.title("Calibrate Test")
-    
-    up = Button(my_w_child, text ="+", command = lambda: grow(line_length))
-    up.pack()
-    
-    down = Button(my_w_child, text ="-", command = lambda: shrink(line_length))
-    down.pack()
-    
-    myCanvas = Canvas(my_w_child,height=window_height,width=window_width)
-    myCanvas.pack()
-    
 
-
-    
-    while x == True:
-        myCanvas.delete(ALL)
-            
-        #print(line_length.get())
-        
-        # This creates a line of length 200 (straight horizontal line)
-        line = myCanvas.create_line(15, 25, line_length.get(), 25)
-        
-        line = myCanvas.create_line(15, 50, (line_length.get()*2), 50)
-        
+    while True:
+        canvas.delete(ALL)
+        rectangle = canvas.create_rectangle(20,50, 3*length.get(),3*sl_value, fill="green")
         my_w_child.update()
-    return line_length.get()
+
+    canvas = Canvas(my_w_child,height=window_height,width=window_width)
+    canvas.pack()

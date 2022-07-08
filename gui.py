@@ -10,7 +10,7 @@ root.title('Testing GUI')
 # height = win32api.GetSystemMetrics(1)
 # width = win32api.GetSystemMetrics(0)
 # root.geometry(str(width) +  "x" + str(height))
-root.geometry("640x480")
+root.geometry("1000x1000")
 # function to get slide value
 def print_val():
     x = int(horizontal.get())
