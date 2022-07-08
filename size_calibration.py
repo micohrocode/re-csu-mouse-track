@@ -1,5 +1,8 @@
 from tkinter import *
-
+x = True
+def ret():
+    global x
+    x = False
 def grow(line_length):
     line_length.set(line_length.get()+1)
 
@@ -15,6 +18,8 @@ def calibrate_size(my_w):
     window_width = 640 * 2
     window_height = 480 * 2
     my_w_child.geometry(str(window_width)+"x"+str(window_height))  # Size of the window 
+    submit = Button(my_w_child, text ="Submit", command = ret)
+    submit.pack()
     my_w_child.title("Calibrate Test")
     
     up = Button(my_w_child, text ="+", command = lambda: grow(line_length))
@@ -26,10 +31,13 @@ def calibrate_size(my_w):
     myCanvas = Canvas(my_w_child,height=window_height,width=window_width)
     myCanvas.pack()
     
-    while True:
+
+
+    
+    while x == True:
         myCanvas.delete(ALL)
             
-        print(line_length.get())
+        #print(line_length.get())
         
         # This creates a line of length 200 (straight horizontal line)
         line = myCanvas.create_line(15, 25, line_length.get(), 25)
@@ -37,3 +45,4 @@ def calibrate_size(my_w):
         line = myCanvas.create_line(15, 50, (line_length.get()*2), 50)
         
         my_w_child.update()
+    return line_length.get()

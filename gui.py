@@ -20,8 +20,9 @@ def print_val():
     main(x,y, root, partcipantName, rectWidth)
     
 def call_calibrate():
-    calibrate_size(root)
-
+    num = calibrate_size(root)
+    print(num)
+    
 hsv = Image.open("hsv.png")
 test = hsv.resize((600, 300))
 test = ImageTk.PhotoImage(test)
