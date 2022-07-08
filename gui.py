@@ -1,6 +1,8 @@
 from tkinter import *
 from version2 import *
+from size_calibration import *
 from PIL import Image, ImageTk
+
 # window setup
 root = Tk()
 root.title('Testing GUI')
@@ -16,6 +18,9 @@ def print_val():
     partcipantName = pidEntry.get()
     rectWidth = var.get() #1 = thin, #2= medium, #3 = thick
     main(x,y, root, partcipantName, rectWidth)
+    
+def call_calibrate():
+    calibrate_size(root)
 
 hsv = Image.open("hsv.png")
 test = hsv.resize((600, 300))
@@ -55,6 +60,9 @@ R3.grid( row = 13, column = 0)
 
 submit = Button(root, text ="Submit", command = print_val)
 submit.grid(row = 12, column=1)
+
+calibrate = Button(root, text ="Calibrate", command = call_calibrate)
+calibrate.grid(row = 13, column=1)
 
 
 root.mainloop()
