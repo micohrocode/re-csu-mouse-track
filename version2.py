@@ -145,9 +145,9 @@ def main(sval1,sval2,my_w,name, inch, amp, targetWidth):
     start_counter = 0
 
     # external
-    #video = cv2.VideoCapture(1, cv2.CAP_DSHOW)
+    video = cv2.VideoCapture(1, cv2.CAP_DSHOW)
     # build in
-    video = cv2.VideoCapture(0)
+    # video = cv2.VideoCapture(0)
    
     # value to convert pixel distance to millimeters check
     pixelToMM = False
@@ -210,14 +210,6 @@ def main(sval1,sval2,my_w,name, inch, amp, targetWidth):
             rectangle1 = draw_rectangle(myCanvas, window_center_x, window_center_y, window_width, window_height,.4, 'right', inch, amp, targetWidth)
             rectangle2 = draw_rectangle(myCanvas, window_center_x, window_center_y, window_width, window_height, .4,  'left', inch, amp, targetWidth)
             
-            # center target
-            target = myCanvas.create_rectangle(int(window_center_x +(window_width*.25)),
-                                 int(window_center_y +(window_height*.05)), 
-                                 int(window_center_x +(window_width*.35)), 
-                                 int(window_center_y -(window_height*.05)),
-                                 outline="#fb0",
-                                 fill="#fb0")
-            
             # cursor updating/drawing
             r = 10
             x0 = ((x2/640)*window_width) - r
@@ -225,9 +217,6 @@ def main(sval1,sval2,my_w,name, inch, amp, targetWidth):
             x1 = ((x2/640)*window_width) + r
             y1 = ((y/480)*window_width) + r
             myCanvas.create_oval(x0, y0, x1, y1)
-            
-            # collision detection
-            cursor_collision(myCanvas,myCanvas.coords(target),3,target)
             
             # center start position
             start_center_move = myCanvas.create_rectangle(int(window_center_x - 25),

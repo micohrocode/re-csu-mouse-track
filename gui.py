@@ -17,12 +17,10 @@ def mainCV():
     subCode = pidEntry.get()
     x0, y0, x1, y1 = canvas.coords(rectangle) 
     inch = x1-x0
-    targetWidth = int(twEntry.get())
-    amplitude = int(ampEntry.get())
+    targetWidth = float(twEntry.get())
+    amplitude = float(ampEntry.get())
     main(lowerX,upperX, root, subCode,inch, amplitude, targetWidth)
     
-  
-
 def width(e):
     x0, y0, x1, y1 = canvas.coords(rectangle) 
     x1 = 2 * float(e)                       
