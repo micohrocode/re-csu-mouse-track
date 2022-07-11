@@ -11,6 +11,12 @@ height = win32api.GetSystemMetrics(1)
 width = win32api.GetSystemMetrics(0)
 root.geometry(str(width) +  "x" + str(height))
 
+def mainCV():
+    x = int(horizontal.get())
+    y = int(horizontal2.get())
+    main(x,y, root, pidEntry.get())
+
+  
 
 def width(e):
     x0, y0, x1, y1 = canvas.coords(rectangle) 
@@ -52,7 +58,7 @@ info.grid(row = 0, column= 4)
 rectangle =  canvas.create_rectangle(5,50, 25,3*sl_value, fill="black")
 
 
-submit = Button(root, text ="Submit")
+submit = Button(root, text ="Submit", command = mainCV)
 submit.grid(column=5)
 
 root.mainloop()

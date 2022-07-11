@@ -90,7 +90,7 @@ def cursor_collision(canvas,coords,active,target):
         canvas.itemconfig(target, fill='green')
         return True
 
-def main(sval1,sval2,my_w,name, rectW):
+def main(sval1,sval2,my_w,name):
     my_w_child=Toplevel(my_w) # Child window 
     
     window_width = 640 * 2
