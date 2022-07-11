@@ -98,10 +98,11 @@ def cursor_collision(canvas,coords,active,target):
 
 def main(sval1,sval2,my_w,name, inch, amp, targetWidth):
     my_w_child=Toplevel(my_w) # Child window 
+   
+    window_width= my_w_child.winfo_screenwidth()               
+    window_height= my_w_child.winfo_screenheight()               
+    my_w_child.geometry("%dx%d" % (window_width,  window_height))
     
-    window_width = 640 * 2
-    window_height = 480 * 2
-    my_w_child.geometry(str(window_width)+"x"+str(window_height))  # Size of the window 
     my_w_child.title("Cursor Test")
     myCanvas = Canvas(my_w_child,height=window_height,width=window_width)
     myCanvas.pack()
@@ -145,9 +146,9 @@ def main(sval1,sval2,my_w,name, inch, amp, targetWidth):
     start_counter = 0
 
     # external
-    video = cv2.VideoCapture(1, cv2.CAP_DSHOW)
+    #video = cv2.VideoCapture(1, cv2.CAP_DSHOW)
     # build in
-    # video = cv2.VideoCapture(0)
+    video = cv2.VideoCapture(0)
    
     # value to convert pixel distance to millimeters check
     pixelToMM = False

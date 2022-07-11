@@ -5,11 +5,11 @@ from PIL import Image, ImageTk
 
 
 root = Tk()
-root.title('Testing GUI')
+root.title('Data Acquistion')
 sl_value = 10
-height = win32api.GetSystemMetrics(1)
-width = win32api.GetSystemMetrics(0)
-root.geometry(str(width) +  "x" + str(height))
+window_width= root.winfo_screenwidth()               
+window_height= root.winfo_screenheight()               
+root.geometry("%dx%d" % (window_width,  window_height))
 
 def mainCV():
     lowerX = int(horizontal.get())
@@ -36,15 +36,15 @@ imglabel.grid(column = 0, columnspan=3, rowspan = 3, padx = (0,30))
 l1 = Label(root, text = "Lower X Bound:")
 l2 = Label(root, text = "Upper Y Bound:")
 l3 = Label(root, text = "Example for Green: Lower = 50, Upper = 60")
-l3.grid(row = 6, column = 1)
+l3.grid(row = 6, column = 0)
 l1.grid(row = 7, column = 0)
-l2.grid(row = 8, column = 0)
+l2.grid(row = 8, column = 0, pady= (0,30))
  
 horizontal = Entry(root)
 horizontal2 = Entry(root)
 
 horizontal.grid(row = 7, column = 1,)
-horizontal2.grid(row = 8, column = 1)
+horizontal2.grid(row = 8, column = 1,  pady= (0,30))
  
 
 
@@ -56,18 +56,32 @@ info = Label(root, text = "Adust the Slider untill the rectangle measures an INC
 info.grid(row = 0, column= 4)
 
 rectangle =  canvas.create_rectangle(5,50, 25,3*sl_value, fill="black")
-targwidth = Label(root, text = "Target Width (inches): ")
-amp = Label(root, text = "Amplitude (inches): ")
+targwidth = Label(root, text = "Target Width (in): ")
+amp = Label(root, text = "Amplitude (in): ")
 targwidth.grid(row = 10, column = 0)
 amp.grid(row = 11, column = 0)
 twEntry= Entry(root)
 ampEntry = Entry(root)
 twEntry.grid (row = 10, column = 1)
 ampEntry.grid(row = 11, column = 1)
+
+
+trialDur = Label(root, text = "Intertrial Interval (sec): " )
+trialDur.grid(row =12, column = 0)
+interTrial = Entry(root)
+interTrial.grid(row = 12, column = 1)
+
+calibItem = Label(root, text = "Item width for camera calibration (in):")
+calibItem.grid(row = 13, column = 0)
+calibItemEntry = Entry(root)
+calibItemEntry.grid(row = 13, column = 1)
+
+
+
 pid = Label(root, text = "Subject Code:")
-pid.grid(row= 12, column = 0,  pady = (0,20)) 
+pid.grid( row = 14, column = 0,  pady = (20,0)) 
 pidEntry = Entry(root)
-pidEntry.grid(row=12, column =1, pady = (0,20))
+pidEntry.grid(row = 14, column =1, pady = (20,0))
 
 submit = Button(root, text ="Submit", command = mainCV)
 submit.grid(column=5)
