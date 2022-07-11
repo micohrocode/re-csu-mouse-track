@@ -60,24 +60,30 @@ def calibrate(frame,sizeMM,l_b,u_b):
     pixelPerMM = w/sizeMM
    
     return pixelPerMM
-
-def draw_rectangle(canvas,x_center,y_center,window_w,window_h,amplitude,thickness,height,side):
+def draw_rectangle(canvas,x_center,y_center,window_w,window_h,height,side, inch, amp, targetWidth):
+   
+    halfWidth = targetWidth/2 * inch
+    amp = amp * inch
+    halfAmp = amp/2
+    
     if side == 'right':
         return canvas.create_rectangle(
-        int(x_center +(window_w*amplitude)), 
+        int(x_center +(halfAmp - halfWidth)), 
         int(y_center +(window_h*height)), 
-        int(x_center +(window_w*(amplitude+thickness))), 
+        int(x_center +(halfAmp + halfWidth)), 
         int(y_center -(window_h*height)),
         outline="#fb0",
         fill="#fb0")
+
     elif side == 'left':
         return canvas.create_rectangle(
-        int(x_center -(window_w*(amplitude+thickness))), 
+        int(x_center -(halfAmp - halfWidth)), 
         int(y_center +(window_h*height)), 
-        int(x_center -(window_w*amplitude)), 
+        int(x_center -(halfAmp + halfWidth)), 
         int(y_center -(window_h*height)),
         outline="#fb0",
         fill="#fb0")
+
    
 def cursor_collision(canvas,coords,active,target):
     coll = canvas.find_overlapping(coords[0],
@@ -90,7 +96,7 @@ def cursor_collision(canvas,coords,active,target):
         canvas.itemconfig(target, fill='green')
         return True
 
-def main(sval1,sval2,my_w,name):
+def main(sval1,sval2,my_w,name, inch, amp, targetWidth):
     my_w_child=Toplevel(my_w) # Child window 
     
     window_width = 640 * 2
@@ -139,9 +145,9 @@ def main(sval1,sval2,my_w,name):
     start_counter = 0
 
     # external
-    video = cv2.VideoCapture(1, cv2.CAP_DSHOW)
+    #video = cv2.VideoCapture(1, cv2.CAP_DSHOW)
     # build in
-    # video = cv.VideoCapture(0)
+    video = cv2.VideoCapture(0)
    
     # value to convert pixel distance to millimeters check
     pixelToMM = False
@@ -201,8 +207,8 @@ def main(sval1,sval2,my_w,name):
             window_center_y = window_height / 2
             
             # rectangle area drawing
-            rectangle1 = draw_rectangle(myCanvas, window_center_x, window_center_y, window_width, window_height, .25, .10, .40, 'right')
-            rectangle2 = draw_rectangle(myCanvas, window_center_x, window_center_y, window_width, window_height, .25, .10, .40, 'left')
+            rectangle1 = draw_rectangle(myCanvas, window_center_x, window_center_y, window_width, window_height,.4, 'right', inch, amp, targetWidth)
+            rectangle2 = draw_rectangle(myCanvas, window_center_x, window_center_y, window_width, window_height, .4,  'left', inch, amp, targetWidth)
             
             # center target
             target = myCanvas.create_rectangle(int(window_center_x +(window_width*.25)),

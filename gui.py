@@ -12,15 +12,20 @@ width = win32api.GetSystemMetrics(0)
 root.geometry(str(width) +  "x" + str(height))
 
 def mainCV():
-    x = int(horizontal.get())
-    y = int(horizontal2.get())
-    main(x,y, root, pidEntry.get())
-
+    lowerX = int(horizontal.get())
+    upperX = int(horizontal2.get())
+    subCode = pidEntry.get()
+    x0, y0, x1, y1 = canvas.coords(rectangle) 
+    inch = x1-x0
+    targetWidth = int(twEntry.get())
+    amplitude = int(ampEntry.get())
+    main(lowerX,upperX, root, subCode,inch, amplitude, targetWidth)
+    
   
 
 def width(e):
     x0, y0, x1, y1 = canvas.coords(rectangle) 
-    x1 = 3 * float(e)                       
+    x1 = 2 * float(e)                       
     canvas.coords(rectangle, x0, y0, x1, y1)  
     
 hsv = Image.open("hsv.png")
@@ -43,10 +48,7 @@ horizontal2 = Entry(root)
 horizontal.grid(row = 7, column = 1,)
 horizontal2.grid(row = 8, column = 1)
  
-pid = Label(root, text = "Subject Code:")
-pid.grid(row= 9, column = 0,  pady = (0,20)) 
-pidEntry = Entry(root)
-pidEntry.grid(row=9, column =1, pady = (0,20))
+
 
 slider = Scale(root, from_=10 , to=150, orient = HORIZONTAL, bg="gray", length = 800,command = width)
 slider.grid(row=1, column = 4)
@@ -56,7 +58,18 @@ info = Label(root, text = "Adust the Slider untill the rectangle measures an INC
 info.grid(row = 0, column= 4)
 
 rectangle =  canvas.create_rectangle(5,50, 25,3*sl_value, fill="black")
-
+targwidth = Label(root, text = "Target Width (inches): ")
+amp = Label(root, text = "Amplitude (inches): ")
+targwidth.grid(row = 10, column = 0)
+amp.grid(row = 11, column = 0)
+twEntry= Entry(root)
+ampEntry = Entry(root)
+twEntry.grid (row = 10, column = 1)
+ampEntry.grid(row = 11, column = 1)
+pid = Label(root, text = "Subject Code:")
+pid.grid(row= 12, column = 0,  pady = (0,20)) 
+pidEntry = Entry(root)
+pidEntry.grid(row=12, column =1, pady = (0,20))
 
 submit = Button(root, text ="Submit", command = mainCV)
 submit.grid(column=5)
