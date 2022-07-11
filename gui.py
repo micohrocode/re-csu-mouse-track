@@ -1,38 +1,32 @@
 from tkinter import *
 from version2 import *
-from size_calibration import *
 from PIL import Image, ImageTk
 
-# window setup
+
+
 root = Tk()
 root.title('Testing GUI')
+sl_value = 10
+height = win32api.GetSystemMetrics(1)
+width = win32api.GetSystemMetrics(0)
+root.geometry(str(width) +  "x" + str(height))
 
-# height = win32api.GetSystemMetrics(1)
-# width = win32api.GetSystemMetrics(0)
-# root.geometry(str(width) +  "x" + str(height))
-root.geometry("1000x1000")
-# function to get slide value
-def print_val():
-    x = int(horizontal.get())
-    y = int(horizontal2.get())
-    partcipantName = pidEntry.get()
-    rectWidth = var.get() #1 = thin, #2= medium, #3 = thick
-    main(x,y, root, partcipantName, rectWidth)
-    
-def call_calibrate():
-    num = calibrate_size(root)
-    print(num)
+
+def width(e):
+    x0, y0, x1, y1 = canvas.coords(rectangle) 
+    x1 = 3 * float(e)                       
+    canvas.coords(rectangle, x0, y0, x1, y1)  
     
 hsv = Image.open("hsv.png")
 test = hsv.resize((600, 300))
 test = ImageTk.PhotoImage(test)
 imglabel = Label(image=test)
 imglabel.image = test
-imglabel.grid(column = 0, rowspan = 5, columnspan=10)
+imglabel.grid(column = 0, columnspan=3, rowspan = 3, padx = (0,30))
 
 l1 = Label(root, text = "Lower X Bound:")
 l2 = Label(root, text = "Upper Y Bound:")
-l3 = Label(root, text = "Example for Red: Lower Bound = 0, Upper Bound = 15")
+l3 = Label(root, text = "Example for Green: Lower = 50, Upper = 60")
 l3.grid(row = 6, column = 1)
 l1.grid(row = 7, column = 0)
 l2.grid(row = 8, column = 0)
@@ -43,27 +37,22 @@ horizontal2 = Entry(root)
 horizontal.grid(row = 7, column = 1,)
 horizontal2.grid(row = 8, column = 1)
  
-pid = Label(root, text = "               Name:")
-pid.grid(row= 9, column = 0) 
+pid = Label(root, text = "Subject Code:")
+pid.grid(row= 9, column = 0,  pady = (0,20)) 
 pidEntry = Entry(root)
-pidEntry.grid(row=9, column =1, pady = 5)
+pidEntry.grid(row=9, column =1, pady = (0,20))
 
-TextLabel = Label(root, text = "Pick Rectangle Width")
-TextLabel.grid(row= 10, column = 0)
+slider = Scale(root, from_=10 , to=150, orient = HORIZONTAL, bg="gray", length = 800,command = width)
+slider.grid(row=1, column = 4)
+canvas = Canvas(root,height=50,width=800)
+canvas.grid(row = 2, column = 4)
+info = Label(root, text = "Adust the Slider untill the rectangle measures an INCH in length (use a ruler).\nRemember this number, it will be the same for your computer.")
+info.grid(row = 0, column= 4)
 
-var = IntVar()
-R1 = Radiobutton(root, text="Thin", variable=var, value=1)
-R1.grid(row = 11, column = 0) 
-R2 = Radiobutton(root, text="Medium", variable=var, value=2)
-R2.grid(row = 12, column = 0)
-R3 = Radiobutton(root, text="Thick", variable=var, value=3)
-R3.grid( row = 13, column = 0)
+rectangle =  canvas.create_rectangle(5,50, 25,3*sl_value, fill="black")
 
-submit = Button(root, text ="Submit", command = print_val)
-submit.grid(row = 12, column=1)
 
-calibrate = Button(root, text ="Calibrate", command = call_calibrate)
-calibrate.grid(row = 13, column=1)
-
+submit = Button(root, text ="Submit")
+submit.grid(column=5)
 
 root.mainloop()
