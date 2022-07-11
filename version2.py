@@ -88,6 +88,7 @@ def cursor_collision(canvas,coords,active,target):
     coll = list(coll)
     if len(coll) >= active:
         canvas.itemconfig(target, fill='green')
+        return True
 
 def main(sval1,sval2,my_w,name, rectW):
     my_w_child=Toplevel(my_w) # Child window 
@@ -132,9 +133,10 @@ def main(sval1,sval2,my_w,name, rectW):
     end_time = None
     # pixel velocity threshold
     pixel_vel_thresh = 20
+    
+    # check that it has been to the center
+    has_been_to_start = False
 
-
-   
     # external
     video = cv2.VideoCapture(1, cv2.CAP_DSHOW)
     # build in
@@ -219,68 +221,87 @@ def main(sval1,sval2,my_w,name, rectW):
             
             # collision detection
             cursor_collision(myCanvas,myCanvas.coords(target),3,target)
+            
+            # center start position
+            start_center_move = myCanvas.create_rectangle(int(window_center_x - 25),
+                                 int(window_center_y - 25), 
+                                 int(window_center_x + 25), 
+                                 int(window_center_y + 25),
+                                 outline="black",
+                                 fill="red")
+            
+            
+            start_check_move = cursor_collision(myCanvas,myCanvas.coords(start_center_move),2,start_center_move)
+            
             my_w_child.update()
             
-            # movement checks/data
-            if not prev:
-                # set orginal check point for movement
-                prev = (x2,y)
-                status = "still"
+            if not start_check_move:
+                print("not centered yet")
             else:
-                if prev[0] > x2+pixel_vel_thresh or prev[0] <x2-pixel_vel_thresh:
-                    # if moving in x direction
-                    frame = cv2.putText(frame, 'Moving', (x,y), cv2.FONT_HERSHEY_TRIPLEX,
-                            1, (0,255,0), 2)
-                    # get update point of movement and time since start
-                    if start_time:
-                        move_portions.append([x2,y,(datetime.now() - start_time)])
+                print("centered")
+                has_been_to_start = True
+            
+            if has_been_to_start:
+                # movement checks/data
+                if not prev:
+                    # set orginal check point for movement
                     prev = (x2,y)
-                   
-                    # if it was still start a movement
-                    if status == "still":
-                        start  = (x2,y)
-                        start_time = datetime.now()
-                   
-                    status = "moving"
-                elif prev[1] > y+pixel_vel_thresh or prev[1] <y-pixel_vel_thresh:
-                    # if moving in the y direction
-                    frame = cv2.putText(frame, 'Moving', (x,y), cv2.FONT_HERSHEY_TRIPLEX,
-                            1, (0,255,0), 2)
-                    # get update point of movement and time since start
-                    if start_time:
-                        move_portions.append([x2,y,(datetime.now() - start_time)])
-                    prev = (x2,y)
-                   
-                    # if it was still start a movement
-                    if status == "still":
-                        start  = (x2,y)
-                        start_time = datetime.now()
-                   
-                    status = "moving"
-                elif (prev[0] < x2+pixel_vel_thresh or prev[0] >x2-pixel_vel_thresh) and (prev[1] < y+pixel_vel_thresh or prev[1] >y-pixel_vel_thresh):
-                    # if not moving enough to count as a movement, ie stopped or slowing down
-                    frame = cv2.putText(frame, 'Still', (x,y), cv2.FONT_HERSHEY_TRIPLEX,
-                            1, (0,255,0), 2)
-                   
-                    # if it was in a movement, stop the movement and log the information
-                    if status == "moving":
-                        end = (x2,y)
-                        end_time = datetime.now()
-                        movements.append([start,end,math.dist(start, end),(end_time - start_time),move_portions,start_time, math.dist(start, end)/pixelToMM])
-                        move_portions = []
-                        start_time = None
-                   
                     status = "still"
-            # outSheet.write(cell, 0, x2)
-            # outSheet.write(cell, 1, y)
-            # cell = cell + 1
-        else:
-            cv2.putText(frame,'Error',(100,100),cv2.FONT_HERSHEY_SIMPLEX,1,(0,0,255),2)
-        cv2.imshow('Tracking',frame)
-        cv2.setWindowProperty("Tracking", cv2.WND_PROP_TOPMOST, 1)
-        if cv2.waitKey(20) & 0xFF==ord('p'):
-           break
-        counter = counter + 1
+                else:
+                    if prev[0] > x2+pixel_vel_thresh or prev[0] <x2-pixel_vel_thresh:
+                        # if moving in x direction
+                        frame = cv2.putText(frame, 'Moving', (x,y), cv2.FONT_HERSHEY_TRIPLEX,
+                                1, (0,255,0), 2)
+                        # get update point of movement and time since start
+                        if start_time:
+                            move_portions.append([x2,y,(datetime.now() - start_time)])
+                        prev = (x2,y)
+                       
+                        # if it was still start a movement
+                        if status == "still":
+                            start  = (x2,y)
+                            start_time = datetime.now()
+                       
+                        status = "moving"
+                    elif prev[1] > y+pixel_vel_thresh or prev[1] <y-pixel_vel_thresh:
+                        # if moving in the y direction
+                        frame = cv2.putText(frame, 'Moving', (x,y), cv2.FONT_HERSHEY_TRIPLEX,
+                                1, (0,255,0), 2)
+                        # get update point of movement and time since start
+                        if start_time:
+                            move_portions.append([x2,y,(datetime.now() - start_time)])
+                        prev = (x2,y)
+                       
+                        # if it was still start a movement
+                        if status == "still":
+                            start  = (x2,y)
+                            start_time = datetime.now()
+                       
+                        status = "moving"
+                    elif (prev[0] < x2+pixel_vel_thresh or prev[0] >x2-pixel_vel_thresh) and (prev[1] < y+pixel_vel_thresh or prev[1] >y-pixel_vel_thresh):
+                        # if not moving enough to count as a movement, ie stopped or slowing down
+                        frame = cv2.putText(frame, 'Still', (x,y), cv2.FONT_HERSHEY_TRIPLEX,
+                                1, (0,255,0), 2)
+                       
+                        # if it was in a movement, stop the movement and log the information
+                        if status == "moving":
+                            end = (x2,y)
+                            end_time = datetime.now()
+                            movements.append([start,end,math.dist(start, end),(end_time - start_time),move_portions,start_time, math.dist(start, end)/pixelToMM])
+                            move_portions = []
+                            start_time = None
+                       
+                        status = "still"
+                # outSheet.write(cell, 0, x2)
+                # outSheet.write(cell, 1, y)
+                # cell = cell + 1
+            else:
+                cv2.putText(frame,'Place in center',(100,100),cv2.FONT_HERSHEY_SIMPLEX,1,(0,0,255),2)
+            cv2.imshow('Tracking',frame)
+            cv2.setWindowProperty("Tracking", cv2.WND_PROP_TOPMOST, 1)
+            if cv2.waitKey(20) & 0xFF==ord('p'):
+               break
+            counter = counter + 1
    
     for x in range(len(movements)):
         # start point to end point line
