@@ -136,6 +136,7 @@ def main(sval1,sval2,my_w,name, rectW):
     
     # check that it has been to the center
     has_been_to_start = False
+    start_counter = 0
 
     # external
     video = cv2.VideoCapture(1, cv2.CAP_DSHOW)
@@ -236,10 +237,12 @@ def main(sval1,sval2,my_w,name, rectW):
             my_w_child.update()
             
             if not start_check_move:
-                print("not centered yet")
+                start_counter = 0
             else:
-                print("centered")
-                has_been_to_start = True
+                start_counter = start_counter + 1
+                if start_counter >= 5:
+                    has_been_to_start = True
+                    start_counter = 0
             
             if has_been_to_start:
                 # movement checks/data
@@ -300,7 +303,7 @@ def main(sval1,sval2,my_w,name, rectW):
                 # outSheet.write(cell, 1, y)
                 # cell = cell + 1
             else:
-                cv2.putText(frame,'Place in center',(100,100),cv2.FONT_HERSHEY_SIMPLEX,1,(0,0,255),2)
+                cv2.putText(frame,'Place in center: ' + str(start_counter),(100,100),cv2.FONT_HERSHEY_SIMPLEX,1,(0,0,255),2)
             cv2.imshow('Tracking',frame)
             cv2.setWindowProperty("Tracking", cv2.WND_PROP_TOPMOST, 1)
             if cv2.waitKey(20) & 0xFF==ord('p'):
