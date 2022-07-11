@@ -290,6 +290,10 @@ def main(sval1,sval2,my_w,name, rectW):
                             movements.append([start,end,math.dist(start, end),(end_time - start_time),move_portions,start_time, math.dist(start, end)/pixelToMM])
                             move_portions = []
                             start_time = None
+                            # start new test at the end of each move
+                            has_been_to_start = False
+                            status = "still"
+                            continue
                        
                         status = "still"
                 # outSheet.write(cell, 0, x2)
