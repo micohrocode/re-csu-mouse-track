@@ -10,12 +10,7 @@ import xlsxwriter
 from tkinter import *
 import random
 
-workbook = xlsxwriter.Workbook("data.xlsx")
-outSheet = workbook.add_worksheet()
 
-def pidInfo(name,place):
-    outSheet.write(place+1, 0, "Name:")
-    outSheet.write(place+1, 1, name)
 
 def frameToColorMask(frame,l_b,u_b):
     #constructs the foreground mask from color values
@@ -61,12 +56,14 @@ def calibrate(frame,sizeMM,l_b,u_b):
     pixelPerMM = w/sizeMM
    
     return pixelPerMM
-def draw_rectangle(canvas,x_center,y_center,window_w,window_h,height,side, inch, amp, targetWidth):
+def draw_rectangle(canvas,x_center,y_center,window_w,window_h,height,side, inch, amp, targetWidth,fileName):
    
     halfWidth = targetWidth/2 * inch
     amp = amp * inch
     halfAmp = amp/2
-    
+    workbook = xlsxwriter.Workbook(fileName)
+    outSheet = workbook.add_worksheet()
+
     if side == 'right':
         return canvas.create_rectangle(
         int(x_center +(halfAmp - halfWidth)), 
@@ -362,9 +359,10 @@ def main(sval1,sval2,my_w,name, inch, amp, targetWidth):
         outSheet.write(i+1,5,str(movements[i][5]))
         outSheet.write(i+1,6,str(movements[i][6]))
         excel_place = excel_place + 1
-    
-    pidInfo(name,excel_place)
-    
+
+
+    outSheet.write(excel_place+1, 0, "Subject Code:")
+    outSheet.write(excel_place+1, 1, name)
         
     # move order as plotted legend
     plt.legend(loc='center left', bbox_to_anchor=(1, 0.5))
