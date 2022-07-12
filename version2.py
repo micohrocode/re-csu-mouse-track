@@ -139,16 +139,16 @@ def main(sval1,sval2,my_w,name, inch, amp, targetWidth):
     start_time = None
     end_time = None
     # pixel velocity threshold
-    pixel_vel_thresh = 20
+    pixel_vel_thresh = 3
     
     # check that it has been to the center
     has_been_to_start = False
     start_counter = 0
 
     # external
-    #video = cv2.VideoCapture(1, cv2.CAP_DSHOW)
+    video = cv2.VideoCapture(1, cv2.CAP_DSHOW)
     # build in
-    video = cv2.VideoCapture(0)
+    # video = cv2.VideoCapture(0)
    
     # value to convert pixel distance to millimeters check
     pixelToMM = False
@@ -159,7 +159,11 @@ def main(sval1,sval2,my_w,name, inch, amp, targetWidth):
         pixelToMM = calibrate(frame, 76.2,l_b,u_b)
        
     print('Pixels per mm: '+ str(pixelToMM))
-       
+    
+    # set movement velocity threshold, camera fps
+    pixel_vel_thresh = math.ceil(math.ceil(pixelToMM * 30) / 60)
+    print(pixel_vel_thresh)
+    
     time.sleep(5)
     cell = 1
     while True:
@@ -236,9 +240,13 @@ def main(sval1,sval2,my_w,name, inch, amp, targetWidth):
                 start_counter = 0
             else:
                 start_counter = start_counter + 1
-                if start_counter >= 5:
+                if start_counter >= 10:
                     has_been_to_start = True
                     start_counter = 0
+                    
+            # after they are in the start for long enough check if they leave the start to start move?
+            # in_center  = cursor_collision(myCanvas,myCanvas.coords(start_center_move),2,start_center_move)
+            
             
             if has_been_to_start:
                 # movement checks/data
