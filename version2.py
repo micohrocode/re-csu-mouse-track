@@ -56,13 +56,11 @@ def calibrate(frame,sizeMM,l_b,u_b):
     pixelPerMM = w/sizeMM
    
     return pixelPerMM
-def draw_rectangle(canvas,x_center,y_center,window_w,window_h,height,side, inch, amp, targetWidth,fileName):
+def draw_rectangle(canvas,x_center,y_center,window_w,window_h,height,side, inch, amp, targetWidth):
    
     halfWidth = targetWidth/2 * inch
     amp = amp * inch
     halfAmp = amp/2
-    workbook = xlsxwriter.Workbook(fileName)
-    outSheet = workbook.add_worksheet()
 
     if side == 'right':
         return canvas.create_rectangle(
@@ -94,7 +92,10 @@ def cursor_collision(canvas,coords,active,target):
         canvas.itemconfig(target, fill='green')
         return True
 
-def main(sval1,sval2,my_w,name, inch, amp, targetWidth):
+def main(sval1,sval2,my_w,name, inch, amp, targetWidth ,fileName):
+    workbook = xlsxwriter.Workbook(fileName)
+    outSheet = workbook.add_worksheet()
+
     my_w_child=Toplevel(my_w) # Child window 
    
     window_width= my_w_child.winfo_screenwidth()               
