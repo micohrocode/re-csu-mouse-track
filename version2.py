@@ -8,6 +8,7 @@ import math
 import matplotlib.pyplot as plt
 import xlsxwriter
 from tkinter import *
+import random
 
 workbook = xlsxwriter.Workbook("data.xlsx")
 outSheet = workbook.add_worksheet()
@@ -144,6 +145,9 @@ def main(sval1,sval2,my_w,name, inch, amp, targetWidth):
     # check that it has been to the center
     has_been_to_start = False
     start_counter = 0
+    
+    # rect to start with
+    choose_rect = random.uniform(0, 1)
 
     # external
     video = cv2.VideoCapture(1, cv2.CAP_DSHOW)
@@ -212,8 +216,10 @@ def main(sval1,sval2,my_w,name, inch, amp, targetWidth):
             window_center_y = window_height / 2
             
             # rectangle area drawing
-            rectangle1 = draw_rectangle(myCanvas, window_center_x, window_center_y, window_width, window_height,.4, 'right', inch, amp, targetWidth)
-            rectangle2 = draw_rectangle(myCanvas, window_center_x, window_center_y, window_width, window_height, .4,  'left', inch, amp, targetWidth)
+            if choose_rect >= .5:
+                rectangle1 = draw_rectangle(myCanvas, window_center_x, window_center_y, window_width, window_height,.4, 'right', inch, amp, targetWidth)
+            else:
+                rectangle2 = draw_rectangle(myCanvas, window_center_x, window_center_y, window_width, window_height, .4,  'left', inch, amp, targetWidth)
             
             # cursor updating/drawing
             r = 10
@@ -243,9 +249,10 @@ def main(sval1,sval2,my_w,name, inch, amp, targetWidth):
                 if start_counter >= 10:
                     has_been_to_start = True
                     start_counter = 0
+                    choose_rect = random.uniform(0, 1)
                     
             # after they are in the start for long enough check if they leave the start to start move?
-            # in_center  = cursor_collision(myCanvas,myCanvas.coords(start_center_move),2,start_center_move)
+            in_center  = cursor_collision(myCanvas,myCanvas.coords(start_center_move),2,start_center_move)
             
             
             if has_been_to_start:
@@ -255,7 +262,7 @@ def main(sval1,sval2,my_w,name, inch, amp, targetWidth):
                     prev = (x2,y)
                     status = "still"
                 else:
-                    if prev[0] > x2+pixel_vel_thresh or prev[0] <x2-pixel_vel_thresh:
+                    if prev[0] > x2+pixel_vel_thresh or prev[0] <x2-pixel_vel_thresh and not in_center:
                         # if moving in x direction
                         frame = cv2.putText(frame, 'Moving', (x,y), cv2.FONT_HERSHEY_TRIPLEX,
                                 1, (0,255,0), 2)
@@ -270,7 +277,7 @@ def main(sval1,sval2,my_w,name, inch, amp, targetWidth):
                             start_time = datetime.now()
                        
                         status = "moving"
-                    elif prev[1] > y+pixel_vel_thresh or prev[1] <y-pixel_vel_thresh:
+                    elif prev[1] > y+pixel_vel_thresh or prev[1] <y-pixel_vel_thresh and not in_center:
                         # if moving in the y direction
                         frame = cv2.putText(frame, 'Moving', (x,y), cv2.FONT_HERSHEY_TRIPLEX,
                                 1, (0,255,0), 2)
