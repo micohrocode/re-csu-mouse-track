@@ -91,11 +91,7 @@ def cursor_collision(canvas,coords,active,target):
         return True
 
 def main(sval1,sval2,my_w,name, inch, amp, targetWidth ,fileName, cursorVisible):
-    print(inch)
-    if len(fileName) == 0:
-        workbook = xlsxwriter.Workbook('data.xlsx')
-    else:
-        workbook = xlsxwriter.Workbook(fileName)
+    workbook = xlsxwriter.Workbook(fileName)
     outSheet = workbook.add_worksheet()
     my_w_child=Toplevel(my_w) # Child window 
    
@@ -152,9 +148,9 @@ def main(sval1,sval2,my_w,name, inch, amp, targetWidth ,fileName, cursorVisible)
     choose_rect = random.uniform(0, 1)
 
     # external
-    video = cv2.VideoCapture(1, cv2.CAP_DSHOW)
+    #video = cv2.VideoCapture(1, cv2.CAP_DSHOW)
     # build in
-    # video = cv2.VideoCapture(0)
+    video = cv2.VideoCapture(0)
    
     # value to convert pixel distance to millimeters check
     pixelToMM = False

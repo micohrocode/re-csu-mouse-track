@@ -9,7 +9,8 @@ sl_value = 10
 window_width= root.winfo_screenwidth()               
 window_height= root.winfo_screenheight()               
 root.geometry("%dx%d" % (window_width,  window_height))
-
+global fileCheck
+fileCheck = 0 
 def mainCV():
     cursor = 0
     lowerX = int(lowerXE.get())
@@ -23,6 +24,8 @@ def mainCV():
     cursorVisible = (clicked.get())   
     if cursorVisible.__eq__('Always Visible'):
         cursor = 1
+    if fileCheck == 0 or len(fileName) == 0:
+        fileName = 'data.xlsx'
     main(lowerX,upperX, root, subCode,inch, amplitude, targetWidth, fileName, cursor)
     
 def width(e):
@@ -33,7 +36,8 @@ def width(e):
 def browseFiles():
     filename = filedialog.asksaveasfilename(title = "Create a File", filetypes = (("Excel Files", "*.xlsx*"), ("All files", "*.*")))
     fileOpen.configure(text = filename)
-    
+    global fileCheck
+    fileCheck = 1
         
 hsv = Image.open("hsv.png")
 test = hsv.resize((600, 300))
