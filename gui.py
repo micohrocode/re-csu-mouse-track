@@ -3,7 +3,6 @@ from version2 import *
 from PIL import Image, ImageTk
 from tkinter import filedialog
 
-import pandas as pd
 root = Tk()
 root.title('Data Acquistion')
 sl_value = 10
