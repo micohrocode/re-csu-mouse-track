@@ -12,6 +12,7 @@ window_height= root.winfo_screenheight()
 root.geometry("%dx%d" % (window_width,  window_height))
 
 def mainCV():
+    cursor = 0
     lowerX = int(lowerXE.get())
     upperX = int(upperXE.get())
     subCode = pidE.get()
@@ -20,8 +21,10 @@ def mainCV():
     targetWidth = float(twEntry.get())
     amplitude = float(ampEntry.get())
     fileName = fileOpen.cget("text")
-
-    main(lowerX,upperX, root, subCode,inch, amplitude, targetWidth, fileName)
+    cursorVisible = (clicked.get())   
+    if cursorVisible.__eq__('Always Visible'):
+        cursor = 1
+    main(lowerX,upperX, root, subCode,inch, amplitude, targetWidth, fileName, cursor)
     
 def width(e):
     x0, y0, x1, y1 = canvas.coords(rectangle) 
@@ -91,10 +94,21 @@ pid.grid(row = 15, column = 0,  pady = (20,20))
 pidE = Entry(root)
 pidE.grid(row = 15, column =1, pady = (20,20))
 
+
+opCursorL = Label(root, text = "Cursor Visibility:")
+optionCursor = ["Always Visible", "Not Visible"]
+clicked = StringVar()  
+clicked.set( "Always Visible" )
+drop = OptionMenu( root , clicked , *optionCursor )
+opCursorL.grid(row = 16, column = 0)
+drop.grid(row = 16, column = 1)
+
+
+
 fileOpen = Label(root, text = "Create File (be sure to add \".xlsx\" at the end):")
 fileName = Button(root, text = "Create file",command = browseFiles)
-fileOpen.grid(row = 16, column = 0)
-fileName.grid(row = 16, column = 1)
+fileOpen.grid(row = 18, column = 0)
+fileName.grid(row = 18, column = 1)
 
 
 submit = Button(root, text ="Submit", command = mainCV)

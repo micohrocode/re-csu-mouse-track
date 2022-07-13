@@ -92,7 +92,7 @@ def cursor_collision(canvas,coords,active,target):
         canvas.itemconfig(target, fill='green')
         return True
 
-def main(sval1,sval2,my_w,name, inch, amp, targetWidth ,fileName):
+def main(sval1,sval2,my_w,name, inch, amp, targetWidth ,fileName, cursorVisible):
     workbook = xlsxwriter.Workbook(fileName)
     outSheet = workbook.add_worksheet()
 
