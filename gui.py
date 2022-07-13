@@ -47,11 +47,11 @@ upperX = Label(root, text = "Upper Y Bound:")
 example = Label(root, text = "Example for Green: Lower = 50, Upper = 60")
 example.grid(row = 6, column = 0)
 lowerX.grid(row = 7, column = 0)
-upperX.grid(row = 8, column = 0, pady= (0,30))
+upperX.grid(row = 8, column = 0, pady= (0,15))
 lowerXE = Entry(root)
 upperXE = Entry(root)
 lowerXE.grid(row = 7, column = 1,)
-upperXE.grid(row = 8, column = 1,  pady= (0,30))
+upperXE.grid(row = 8, column = 1,  pady= (0,15))
  
 
 
@@ -63,6 +63,9 @@ info = Label(root, text = "Adust the Slider untill the rectangle measures an INC
 info.grid(row = 0, column= 4)
 
 rectangle =  canvas.create_rectangle(5,50, 25,3*sl_value, fill="black")
+
+warning = Label(root, text ="The sum of Target Width + Amplitude must be less than the screen's width." )
+warning.grid(row = 9, columnspan = 3)
 targwidth = Label(root, text = "Target Width (in): ")
 amp = Label(root, text = "Amplitude (in): ")
 targwidth.grid(row = 10, column = 0)
@@ -73,15 +76,16 @@ twEntry.grid (row = 10, column = 1)
 ampEntry.grid(row = 11, column = 1)
 
 
-interTrial = Label(root, text = "Intertrial Interval (sec): " )
-interTrial.grid(row =12, column = 0)
-interTrialE = Entry(root)
-interTrialE.grid(row = 12, column = 1)
-
 calibItem = Label(root, text = "Item width for camera calibration (in):")
-calibItem.grid(row = 13, column = 0)
+calibItem.grid(row = 12, column = 0, pady = (0,15))
 calibItemE = Entry(root)
-calibItemE.grid(row = 13, column = 1)
+calibItemE.grid(row = 12, column = 1, pady = (0,15))
+
+
+interTrial = Label(root, text = "Intertrial Interval (sec): " )
+interTrial.grid(row =13, column = 0)
+interTrialE = Entry(root)
+interTrialE.grid(row = 13, column = 1)
 
 numTrials = Label(root, text = "Number of Trials: ")
 numTrials.grid(row = 14, column = 0)
