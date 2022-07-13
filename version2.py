@@ -10,8 +10,6 @@ import xlsxwriter
 from tkinter import *
 import random
 
-
-
 def frameToColorMask(frame,l_b,u_b):
     #constructs the foreground mask from color values
     hsv=cv2.cvtColor(frame,cv2.COLOR_BGR2HSV)
@@ -93,10 +91,12 @@ def cursor_collision(canvas,coords,active,target):
         return True
 
 def main(sval1,sval2,my_w,name, inch, amp, targetWidth ,fileName, cursorVisible):
+    print(inch)
     if len(fileName) == 0:
         workbook = xlsxwriter.Workbook('data.xlsx')
     else:
         workbook = xlsxwriter.Workbook(fileName)
+    outSheet = workbook.add_worksheet()
     my_w_child=Toplevel(my_w) # Child window 
    
     window_width= my_w_child.winfo_screenwidth()               
@@ -144,6 +144,9 @@ def main(sval1,sval2,my_w,name, inch, amp, targetWidth ,fileName, cursorVisible)
     # check that it has been to the center
     has_been_to_start = False
     start_counter = 0
+    
+    # check if rect should change
+    free_to_switch = True
     
     # rect to start with
     choose_rect = random.uniform(0, 1)
@@ -215,10 +218,12 @@ def main(sval1,sval2,my_w,name, inch, amp, targetWidth ,fileName, cursorVisible)
             window_center_y = window_height / 2
             
             # rectangle area drawing
-            if choose_rect >= .5:
+            if choose_rect >= .5 and free_to_switch:
                 rectangle1 = draw_rectangle(myCanvas, window_center_x, window_center_y, window_width, window_height,.4, 'right', inch, amp, targetWidth)
+                free_to_switch = False
             else:
                 rectangle2 = draw_rectangle(myCanvas, window_center_x, window_center_y, window_width, window_height, .4,  'left', inch, amp, targetWidth)
+                free_to_switch = False
             
             # cursor updating/drawing
             r = 10
@@ -305,6 +310,7 @@ def main(sval1,sval2,my_w,name, inch, amp, targetWidth ,fileName, cursorVisible)
                             start_time = None
                             # start new test at the end of each move
                             has_been_to_start = False
+                            free_to_switch = True
                             status = "still"
                             continue
                        
