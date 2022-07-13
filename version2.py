@@ -221,10 +221,10 @@ def main(sval1,sval2,my_w,name, inch, amp, targetWidth ,fileName, cursorVisible)
             
             # cursor updating/drawing
             r = 10
-            x0 = ((x2/640)*window_width) - r
-            y0 = ((y/480)*window_width) - r
-            x1 = ((x2/640)*window_width) + r
-            y1 = ((y/480)*window_width) + r
+            x0 = int(x2*(inch/(pixelToMM*25.4))) - r
+            y0 = int(y*(inch/(pixelToMM*25.4))) - r
+            x1 = int(x2*(inch/(pixelToMM*25.4))) + r
+            y1 = int(y*(inch/(pixelToMM*25.4))) + r
             myCanvas.create_oval(x0, y0, x1, y1)
             
             # center start position
