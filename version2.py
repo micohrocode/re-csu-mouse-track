@@ -93,9 +93,10 @@ def cursor_collision(canvas,coords,active,target):
         return True
 
 def main(sval1,sval2,my_w,name, inch, amp, targetWidth ,fileName, cursorVisible):
-    workbook = xlsxwriter.Workbook(fileName)
-    outSheet = workbook.add_worksheet()
-
+    if len(fileName) == 0:
+        workbook = xlsxwriter.Workbook('data.xlsx')
+    else:
+        workbook = xlsxwriter.Workbook(fileName)
     my_w_child=Toplevel(my_w) # Child window 
    
     window_width= my_w_child.winfo_screenwidth()               
