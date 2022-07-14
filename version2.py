@@ -54,7 +54,7 @@ def calibrate(frame,sizeMM,l_b,u_b):
     pixelPerMM = w/sizeMM
    
     return pixelPerMM
-def draw_rectangle(canvas,x_center,y_center,window_w,window_h,height,side, inch, amp, targetWidth):
+def draw_rectangle(canvas,x_center,y_center,window_w,window_h,height,side, inch, amp, targetWidth, showing):
    
     halfWidth = targetWidth/2 * inch
     amp = amp * inch
@@ -67,7 +67,8 @@ def draw_rectangle(canvas,x_center,y_center,window_w,window_h,height,side, inch,
         int(x_center +(halfAmp + halfWidth)), 
         int(y_center -(window_h*height)),
         outline="#fb0",
-        fill="#fb0")
+        fill="#fb0",
+        state=showing)
 
     elif side == 'left':
         return canvas.create_rectangle(
@@ -76,7 +77,8 @@ def draw_rectangle(canvas,x_center,y_center,window_w,window_h,height,side, inch,
         int(x_center -(halfAmp + halfWidth)), 
         int(y_center -(window_h*height)),
         outline="#fb0",
-        fill="#fb0")
+        fill="#fb0",
+        state=showing)
 
    
 def cursor_collision(canvas,coords,active,target):
@@ -146,7 +148,7 @@ def main(sval1,sval2,my_w,name, inch, amp, targetWidth ,fileName, cursorVisible)
     start_counter = 0
     
     # check if rect should change
-    free_to_switch = True
+    # free_to_switch = True
     
     # rect to start with
     choose_rect = random.uniform(0, 1)
@@ -218,12 +220,8 @@ def main(sval1,sval2,my_w,name, inch, amp, targetWidth ,fileName, cursorVisible)
             window_center_y = window_height / 2
             
             # rectangle area drawing
-            if choose_rect >= .5 and free_to_switch:
-                rectangle1 = draw_rectangle(myCanvas, window_center_x, window_center_y, window_width, window_height,.4, 'right', inch, amp, targetWidth)
-                free_to_switch = False
-            else:
-                rectangle2 = draw_rectangle(myCanvas, window_center_x, window_center_y, window_width, window_height, .4,  'left', inch, amp, targetWidth)
-                free_to_switch = False
+            rectangleR = draw_rectangle(myCanvas, window_center_x, window_center_y, window_width, window_height,.4, 'right', inch, amp, targetWidth,'hidden')
+            rectangleL = draw_rectangle(myCanvas, window_center_x, window_center_y, window_width, window_height, .4,  'left', inch, amp, targetWidth,'hidden')
             
             # cursor updating/drawing
             r = 10
@@ -253,13 +251,21 @@ def main(sval1,sval2,my_w,name, inch, amp, targetWidth ,fileName, cursorVisible)
                 if start_counter >= 10:
                     has_been_to_start = True
                     start_counter = 0
-                    choose_rect = random.uniform(0, 1)
-                    
-            # after they are in the start for long enough check if they leave the start to start move?
-            in_center  = cursor_collision(myCanvas,myCanvas.coords(start_center_move),2,start_center_move)
-            
-            
+                    # choose_rect = random.uniform(0, 1)
+                         
+            # # after they are in the start for long enough check if they leave the start to start move?
+            # in_center  = cursor_collision(myCanvas,myCanvas.coords(start_center_move),2,start_center_move)
+              
             if has_been_to_start:
+                if choose_rect >= .5:
+                    print('right')
+                    myCanvas.itemconfigure(rectangleR, state='normal')
+                    my_w_child.update()
+                elif choose_rect < .5:
+                    print('left')
+                    myCanvas.itemconfigure(rectangleL, state='normal')
+                    my_w_child.update()
+                
                 # movement checks/data
                 if not prev:
                     # set orginal check point for movement
@@ -310,8 +316,8 @@ def main(sval1,sval2,my_w,name, inch, amp, targetWidth ,fileName, cursorVisible)
                             start_time = None
                             # start new test at the end of each move
                             has_been_to_start = False
-                            free_to_switch = True
                             status = "still"
+                            choose_rect = random.uniform(0, 1)
                             continue
                        
                         status = "still"
