@@ -62,9 +62,9 @@ def draw_rectangle(canvas,x_center,y_center,window_w,window_h,height,side, inch,
 
     if side == 'right':
         return canvas.create_rectangle(
-        int(x_center +(halfAmp - halfWidth)), 
-        int(y_center +(window_h*height)), 
-        int(x_center +(halfAmp + halfWidth)), 
+        int(x_center +(halfAmp - halfWidth)),
+        int(y_center +(window_h*height)),
+        int(x_center +(halfAmp + halfWidth)),
         int(y_center -(window_h*height)),
         outline="#fb0",
         fill="#fb0",
@@ -72,9 +72,9 @@ def draw_rectangle(canvas,x_center,y_center,window_w,window_h,height,side, inch,
 
     elif side == 'left':
         return canvas.create_rectangle(
-        int(x_center -(halfAmp - halfWidth)), 
-        int(y_center +(window_h*height)), 
-        int(x_center -(halfAmp + halfWidth)), 
+        int(x_center -(halfAmp - halfWidth)),
+        int(y_center +(window_h*height)),
+        int(x_center -(halfAmp + halfWidth)),
         int(y_center -(window_h*height)),
         outline="#fb0",
         fill="#fb0",
@@ -83,10 +83,10 @@ def draw_rectangle(canvas,x_center,y_center,window_w,window_h,height,side, inch,
    
 def cursor_collision(canvas,coords,active,target):
     coll = canvas.find_overlapping(coords[0],
-                         coords[1], 
-                         coords[2], 
+                         coords[1],
+                         coords[2],
                          coords[3])
-    
+   
     coll = list(coll)
     if len(coll) >= active:
         canvas.itemconfig(target, fill='green')
@@ -95,18 +95,18 @@ def cursor_collision(canvas,coords,active,target):
 def main(sval1,sval2,my_w,name, inch, amp, targetWidth ,fileName, cursorVisible):
     workbook = xlsxwriter.Workbook(fileName)
     outSheet = workbook.add_worksheet()
-    my_w_child=Toplevel(my_w) # Child window 
+    my_w_child=Toplevel(my_w) # Child window
    
-    window_width= my_w_child.winfo_screenwidth()               
-    window_height= my_w_child.winfo_screenheight()               
+    window_width= my_w_child.winfo_screenwidth()              
+    window_height= my_w_child.winfo_screenheight()              
     my_w_child.geometry("%dx%d" % (window_width,  window_height))
-    
+   
     my_w_child.title("Cursor Test")
     myCanvas = Canvas(my_w_child,height=window_height,width=window_width)
     myCanvas.pack()
-    
-    
-    
+   
+   
+   
     l_b=np.array([sval1,0,20])# lower hsv bound for orange
     u_b=np.array([sval2,255,255])# upper hsv bound to orange
    
@@ -138,14 +138,14 @@ def main(sval1,sval2,my_w,name, inch, amp, targetWidth ,fileName, cursorVisible)
     end_time = None
     # pixel velocity threshold
     pixel_vel_thresh = 3
-    
+   
     # check that it has been to the center
     has_been_to_start = False
     start_counter = 0
-    
+   
     # check if rect should change
     # free_to_switch = True
-    
+   
     # rect to start with
     choose_rect = random.uniform(0, 1)
 
@@ -163,11 +163,11 @@ def main(sval1,sval2,my_w,name, inch, amp, targetWidth ,fileName, cursorVisible)
         pixelToMM = calibrate(frame, 76.2,l_b,u_b)
        
     print('Pixels per mm: '+ str(pixelToMM))
-    
+   
     # set movement velocity threshold, camera fps
     pixel_vel_thresh = math.ceil(math.ceil(pixelToMM * 30) / 60)
     print(pixel_vel_thresh)
-    
+   
     time.sleep(5)
     cell = 1
     while True:
@@ -207,39 +207,40 @@ def main(sval1,sval2,my_w,name, inch, amp, targetWidth ,fileName, cursorVisible)
             cv2.rectangle(frame,(x,y),(x+w,y+h),(0,255,0),2,1)
             x2 = x + int(w/2)
             cv2.circle(frame,(x2,y),4,(0,0,255),-1)
-            
+           
             # clear canvas for updating
             myCanvas.delete(ALL)
-            
+           
             # find center point
             window_center_x = window_width / 2
             window_center_y = window_height / 2
-            
+           
             # rectangle area drawing
             rectangleR = draw_rectangle(myCanvas, window_center_x, window_center_y, window_width, window_height,.4, 'right', inch, amp, targetWidth,'hidden')
             rectangleL = draw_rectangle(myCanvas, window_center_x, window_center_y, window_width, window_height, .4,  'left', inch, amp, targetWidth,'hidden')
-            
+           
             # cursor updating/drawing
             r = 10
             x0 = int(x2*(inch/(pixelToMM*25.4))) - r
             y0 = int(y*(inch/(pixelToMM*25.4))) - r
             x1 = int(x2*(inch/(pixelToMM*25.4))) + r
             y1 = int(y*(inch/(pixelToMM*25.4))) + r
-            myCanvas.create_oval(x0, y0, x1, y1)
-            
+            cursorOval = myCanvas.create_oval(x0, y0, x1, y1)
+           
             # center start position
             start_center_move = myCanvas.create_rectangle(int(window_center_x - 25),
-                                 int(window_center_y - 25), 
-                                 int(window_center_x + 25), 
+                                 int(window_center_y - 25),
+                                 int(window_center_x + 25),
                                  int(window_center_y + 25),
                                  outline="black",
                                  fill="red")
-            
-            
+           
+           
+           
             start_check_move = cursor_collision(myCanvas,myCanvas.coords(start_center_move),2,start_center_move)
-            
+           
             my_w_child.update()
-            
+           
             if not start_check_move:
                 start_counter = 0
             else:
@@ -251,15 +252,17 @@ def main(sval1,sval2,my_w,name, inch, amp, targetWidth ,fileName, cursorVisible)
                          
             # # after they are in the start for long enough check if they leave the start to start move?
             in_center  = cursor_collision(myCanvas,myCanvas.coords(start_center_move),2,start_center_move)
-              
+             
             if has_been_to_start:
+                if cursorVisible == 0:
+                    myCanvas.itemconfigure(cursorOval, state = 'hidden')
                 if choose_rect >= .5:
                     myCanvas.itemconfigure(rectangleR, state='normal')
                     my_w_child.update()
                 elif choose_rect < .5:
                     myCanvas.itemconfigure(rectangleL, state='normal')
                     my_w_child.update()
-                
+               
                 # movement checks/data
                 if not prev:
                     # set orginal check point for movement
@@ -303,6 +306,16 @@ def main(sval1,sval2,my_w,name, inch, amp, targetWidth ,fileName, cursorVisible)
                        
                         # if it was in a movement, stop the movement and log the information
                         if status == "moving":
+                            x1o, y1o, x2o, y2o = myCanvas.coords(cursorOval)
+                            if choose_rect >= .5:
+                                x1r, y1r, x2r, y2r = myCanvas.coords(rectangleR)
+                                if x1o >= x1r and y1o >= y1r and x2o <= x2r and y2o <= y2r:
+                                    myCanvas.itemconfig(rectangleR, fill='green')
+                            else:
+                                x1r, y1r, x2r, y2r = myCanvas.coords(rectangleL)
+                                if x1o >= x1r and y1o >= y1r and x2o <= x2r and y2o <= y2r:
+                                    myCanvas.itemconfig(rectangleL, fill='green')
+                            my_w_child.update()
                             end = (x2,y)
                             end_time = datetime.now()
                             movements.append([start,end,math.dist(start, end),(end_time - start_time),move_portions,start_time, math.dist(start, end)/pixelToMM])
@@ -345,18 +358,18 @@ def main(sval1,sval2,my_w,name, inch, amp, targetWidth ,fileName, cursorVisible)
                 accerlation = ((velocity - movements[x][4][y-1][3])/(movements[x][4][y][2].microseconds*0.000001))
                 movements[x][4][y].append(accerlation)
             plt.plot(movements[x][4][y][0], movements[x][4][y][1], marker = 'o',color='k')
-      
+     
     # excel sheet organization
     outSheet.write("A1","Start")
-    outSheet.write("B1","End") 
+    outSheet.write("B1","End")
     outSheet.write("C1","Distance")
-    outSheet.write("D1","Total Time") 
+    outSheet.write("D1","Total Time")
     outSheet.write("E1","Moves")
     outSheet.write("F1","Time Of")
     outSheet.write("G1","MM Traveled")
-    
+   
     excel_place = 0
-    
+   
     # look at how to display movement data
     for i in range(len(movements)):
         outSheet.write(i+1,0,str(movements[i][0]))
@@ -371,7 +384,7 @@ def main(sval1,sval2,my_w,name, inch, amp, targetWidth ,fileName, cursorVisible)
 
     outSheet.write(excel_place+1, 0, "Subject Code:")
     outSheet.write(excel_place+1, 1, name)
-        
+       
     # move order as plotted legend
     plt.legend(loc='center left', bbox_to_anchor=(1, 0.5))
     ax1.invert_yaxis()
