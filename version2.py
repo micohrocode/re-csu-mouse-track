@@ -150,9 +150,9 @@ def main(sval1,sval2,my_w,name, inch, amp, targetWidth ,fileName, cursorVisible)
     choose_rect = random.uniform(0, 1)
 
     # external
-    #video = cv2.VideoCapture(1, cv2.CAP_DSHOW)
+    video = cv2.VideoCapture(1, cv2.CAP_DSHOW)
     # build in
-    video = cv2.VideoCapture(0)
+    # video = cv2.VideoCapture(0)
    
     # value to convert pixel distance to millimeters check
     pixelToMM = False
@@ -250,15 +250,13 @@ def main(sval1,sval2,my_w,name, inch, amp, targetWidth ,fileName, cursorVisible)
                     # choose_rect = random.uniform(0, 1)
                          
             # # after they are in the start for long enough check if they leave the start to start move?
-            # in_center  = cursor_collision(myCanvas,myCanvas.coords(start_center_move),2,start_center_move)
+            in_center  = cursor_collision(myCanvas,myCanvas.coords(start_center_move),2,start_center_move)
               
             if has_been_to_start:
                 if choose_rect >= .5:
-                    print('right')
                     myCanvas.itemconfigure(rectangleR, state='normal')
                     my_w_child.update()
                 elif choose_rect < .5:
-                    print('left')
                     myCanvas.itemconfigure(rectangleL, state='normal')
                     my_w_child.update()
                 
