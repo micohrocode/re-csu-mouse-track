@@ -273,7 +273,7 @@ def main(sval1,sval2,my_w,name, inch, amp, targetWidth ,fileName, cursorVisible)
                     # set orginal check point for movement
                     prev = (x2,y)
                     status = "still"
-                else:
+                elif not in_center:
                     if prev[0] > x2+pixel_vel_thresh or prev[0] <x2-pixel_vel_thresh and not in_center:
                         # if moving in x direction
                         frame = cv2.putText(frame, 'Moving', (x,y_hold), cv2.FONT_HERSHEY_TRIPLEX,
