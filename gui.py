@@ -21,13 +21,14 @@ def mainCV():
     inch = x1-x0
     targetWidth = float(twEntry.get())
     amplitude = float(ampEntry.get())
+    numT = int(numTrialsE.get())
     fileName = fileOpen.cget("text")
     cursorVisible = (clicked.get())   
     if cursorVisible.__eq__('Always Visible'):
         cursor = 1
     if fileCheck == 0 or len(fileName) == 0:
         fileName = 'data.xlsx'
-    main(lowerX,upperX, root, subCode,inch, amplitude, targetWidth, fileName, cursor, interT)
+    main(lowerX,upperX, root, subCode,inch, amplitude, targetWidth, fileName, cursor, interT, numT)
     
 def width(e):
     x0, y0, x1, y1 = canvas.coords(rectangle) 

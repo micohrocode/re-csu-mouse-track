@@ -1,9 +1,7 @@
 import cv2
 import numpy as np
-import win32api, ctypes
 from datetime import datetime
 import time
-import pyautogui
 import math
 import matplotlib.pyplot as plt
 import xlsxwriter
@@ -92,7 +90,7 @@ def cursor_collision(canvas,coords,active,target):
         canvas.itemconfig(target, fill='green')
         return True
 
-def main(sval1,sval2,my_w,name, inch, amp, targetWidth ,fileName, cursorVisible, interT):
+def main(sval1,sval2,my_w,name, inch, amp, targetWidth ,fileName, cursorVisible, interT, numT):
     workbook = xlsxwriter.Workbook(fileName)
     outSheet = workbook.add_worksheet()
     my_w_child=Toplevel(my_w) # Child window
@@ -105,7 +103,7 @@ def main(sval1,sval2,my_w,name, inch, amp, targetWidth ,fileName, cursorVisible,
     myCanvas = Canvas(my_w_child,height=window_height,width=window_width)
     myCanvas.pack()
    
-   
+    
    
     l_b=np.array([sval1,0,20])# lower hsv bound for orange
     u_b=np.array([sval2,255,255])# upper hsv bound to orange
@@ -143,6 +141,8 @@ def main(sval1,sval2,my_w,name, inch, amp, targetWidth ,fileName, cursorVisible,
     has_been_to_start = False
     start_counter = 0
    
+    numTrials = 0
+    
     # check if rect should change
     # free_to_switch = True
    
@@ -183,6 +183,8 @@ def main(sval1,sval2,my_w,name, inch, amp, targetWidth ,fileName, cursorVisible,
     tracker.init(frame,bbox)
    
     while True:
+        if numTrials == numT:
+            break
         if counter == 1:
             while True:
                 _, frame=video.read()
@@ -263,15 +265,18 @@ def main(sval1,sval2,my_w,name, inch, amp, targetWidth ,fileName, cursorVisible,
             in_center  = cursor_collision(myCanvas,myCanvas.coords(start_center_move),2,start_center_move)
              
             if has_been_to_start:
+              
                 if cursorVisible == 0:
                     myCanvas.itemconfigure(cursorOval, state = 'hidden')
                 if choose_rect >= .5:
                     myCanvas.itemconfigure(rectangleR, state='normal')
+                    
                     my_w_child.update()
                 elif choose_rect < .5:
                     myCanvas.itemconfigure(rectangleL, state='normal')
+                    
                     my_w_child.update()
-               
+                
                 # movement checks/data
                 if not prev:
                     # set orginal check point for movement
@@ -343,13 +348,7 @@ def main(sval1,sval2,my_w,name, inch, amp, targetWidth ,fileName, cursorVisible,
                             has_been_to_start = False
                             status = "still"
                             choose_rect = random.uniform(0, 1)
-                            # time.sleep(5)
-                            # oldtime = time.time()
-                            # while True:
-                            #     timeDur = time.time() - oldtime
-                            #     if timeDur >= 1:
-                            #         print(timeDur)
-                            #         break
+                            numTrials = numTrials + 1
                             continue
                        
                         status = "still"
@@ -422,5 +421,6 @@ def main(sval1,sval2,my_w,name, inch, amp, targetWidth ,fileName, cursorVisible,
     video.release()
     cv2.destroyAllWindows()
     workbook.close()
+    my_w_child.destroy()
 if __name__ == "__main__":
     main()
