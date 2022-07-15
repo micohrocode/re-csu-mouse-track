@@ -117,8 +117,8 @@ def main(sval1,sval2,my_w,name, inch, amp, targetWidth ,fileName, cursorVisible)
     fig, ax1 = plt.subplots()
 
     # limit plot to webcam video res size
-    plt.xlim(0 , 640)
-    plt.ylim(0  ,480)
+    plt.xlim(0 , 1920)
+    plt.ylim(0  ,1080)
 
     tracker = cv2.TrackerCSRT_create()
    
@@ -165,8 +165,8 @@ def main(sval1,sval2,my_w,name, inch, amp, targetWidth ,fileName, cursorVisible)
     print('Pixels per mm: '+ str(pixelToMM))
    
     # set movement velocity threshold, camera fps
-    pixel_vel_thresh = math.ceil(math.ceil(pixelToMM * 30) / 60)
-    print(pixel_vel_thresh)
+    pixel_vel_thresh = math.ceil(math.ceil((inch/25.4) * 30) / 60)
+    print('Vel pixel thresh: '+str(pixel_vel_thresh))
    
     time.sleep(5)
     cell = 1
@@ -207,6 +207,11 @@ def main(sval1,sval2,my_w,name, inch, amp, targetWidth ,fileName, cursorVisible)
             cv2.rectangle(frame,(x,y),(x+w,y+h),(0,255,0),2,1)
             x2 = x + int(w/2)
             cv2.circle(frame,(x2,y),4,(0,0,255),-1)
+            
+            y_hold = y
+            
+            x2 = int(x2*(inch/(pixelToMM*25.4)))
+            y = int(y*(inch/(pixelToMM*25.4)))
            
             # clear canvas for updating
             myCanvas.delete(ALL)
@@ -220,11 +225,11 @@ def main(sval1,sval2,my_w,name, inch, amp, targetWidth ,fileName, cursorVisible)
             rectangleL = draw_rectangle(myCanvas, window_center_x, window_center_y, window_width, window_height, .4,  'left', inch, amp, targetWidth,'hidden')
            
             # cursor updating/drawing
-            r = 10
-            x0 = int(x2*(inch/(pixelToMM*25.4))) - r
-            y0 = int(y*(inch/(pixelToMM*25.4))) - r
-            x1 = int(x2*(inch/(pixelToMM*25.4))) + r
-            y1 = int(y*(inch/(pixelToMM*25.4))) + r
+            r = 5
+            x0 = x2 - r
+            y0 = y - r
+            x1 = x2 + r
+            y1 = y + r
             cursorOval = myCanvas.create_oval(x0, y0, x1, y1)
            
             # center start position
@@ -271,7 +276,7 @@ def main(sval1,sval2,my_w,name, inch, amp, targetWidth ,fileName, cursorVisible)
                 else:
                     if prev[0] > x2+pixel_vel_thresh or prev[0] <x2-pixel_vel_thresh and not in_center:
                         # if moving in x direction
-                        frame = cv2.putText(frame, 'Moving', (x,y), cv2.FONT_HERSHEY_TRIPLEX,
+                        frame = cv2.putText(frame, 'Moving', (x,y_hold), cv2.FONT_HERSHEY_TRIPLEX,
                                 1, (0,255,0), 2)
                         # get update point of movement and time since start
                         if start_time:
@@ -286,7 +291,7 @@ def main(sval1,sval2,my_w,name, inch, amp, targetWidth ,fileName, cursorVisible)
                         status = "moving"
                     elif prev[1] > y+pixel_vel_thresh or prev[1] <y-pixel_vel_thresh and not in_center:
                         # if moving in the y direction
-                        frame = cv2.putText(frame, 'Moving', (x,y), cv2.FONT_HERSHEY_TRIPLEX,
+                        frame = cv2.putText(frame, 'Moving', (x,y_hold), cv2.FONT_HERSHEY_TRIPLEX,
                                 1, (0,255,0), 2)
                         # get update point of movement and time since start
                         if start_time:
@@ -301,7 +306,7 @@ def main(sval1,sval2,my_w,name, inch, amp, targetWidth ,fileName, cursorVisible)
                         status = "moving"
                     elif (prev[0] < x2+pixel_vel_thresh or prev[0] >x2-pixel_vel_thresh) and (prev[1] < y+pixel_vel_thresh or prev[1] >y-pixel_vel_thresh):
                         # if not moving enough to count as a movement, ie stopped or slowing down
-                        frame = cv2.putText(frame, 'Still', (x,y), cv2.FONT_HERSHEY_TRIPLEX,
+                        frame = cv2.putText(frame, 'Still', (x,y_hold), cv2.FONT_HERSHEY_TRIPLEX,
                                 1, (0,255,0), 2)
                        
                         # if it was in a movement, stop the movement and log the information
