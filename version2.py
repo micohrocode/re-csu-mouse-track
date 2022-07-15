@@ -306,25 +306,41 @@ def main(sval1,sval2,my_w,name, inch, amp, targetWidth ,fileName, cursorVisible)
                        
                         # if it was in a movement, stop the movement and log the information
                         if status == "moving":
+                            # stopping point to target?
+                            hit_or_miss = 'miss'
+                            target_center = None
+                            
                             x1o, y1o, x2o, y2o = myCanvas.coords(cursorOval)
                             if choose_rect >= .5:
                                 x1r, y1r, x2r, y2r = myCanvas.coords(rectangleR)
+                                target_center = (((x2r+x1r)/2),((y1r+y2r)/2))
                                 if x1o >= x1r and y1o >= y1r and x2o <= x2r and y2o <= y2r:
                                     myCanvas.itemconfig(rectangleR, fill='green')
+                                    hit_or_miss = 'hit'
                             else:
                                 x1r, y1r, x2r, y2r = myCanvas.coords(rectangleL)
+                                target_center = (((x2r+x1r)/2),((y1r+y2r)/2))
                                 if x1o >= x1r and y1o >= y1r and x2o <= x2r and y2o <= y2r:
                                     myCanvas.itemconfig(rectangleL, fill='green')
+                                    hit_or_miss = 'hit'
+                                          
                             my_w_child.update()
                             end = (x2,y)
                             end_time = datetime.now()
-                            movements.append([start,end,math.dist(start, end),(end_time - start_time),move_portions,start_time, math.dist(start, end)/pixelToMM])
+                            movements.append([start,end,math.dist(start, end),(end_time - start_time),move_portions,start_time, math.dist(start, end)/pixelToMM,hit_or_miss,target_center,math.dist(end, target_center)])
                             move_portions = []
                             start_time = None
                             # start new test at the end of each move
                             has_been_to_start = False
                             status = "still"
                             choose_rect = random.uniform(0, 1)
+                            # time.sleep(5)
+                            # oldtime = time.time()
+                            # while True:
+                            #     timeDur = time.time() - oldtime
+                            #     if timeDur >= 1:
+                            #         print(timeDur)
+                            #         break
                             continue
                        
                         status = "still"
@@ -367,6 +383,9 @@ def main(sval1,sval2,my_w,name, inch, amp, targetWidth ,fileName, cursorVisible)
     outSheet.write("E1","Moves")
     outSheet.write("F1","Time Of")
     outSheet.write("G1","MM Traveled")
+    outSheet.write("H1","Target Hit")
+    outSheet.write("I1","Target Center")
+    outSheet.write("J1","Distance From Center")
    
     excel_place = 0
    
@@ -379,6 +398,9 @@ def main(sval1,sval2,my_w,name, inch, amp, targetWidth ,fileName, cursorVisible)
         outSheet.write(i+1,4,str(movements[i][4]))
         outSheet.write(i+1,5,str(movements[i][5]))
         outSheet.write(i+1,6,str(movements[i][6]))
+        outSheet.write(i+1,7,str(movements[i][7]))
+        outSheet.write(i+1,8,str(movements[i][8]))
+        outSheet.write(i+1,9,str(movements[i][9]))
         excel_place = excel_place + 1
 
 
