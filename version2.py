@@ -92,7 +92,7 @@ def cursor_collision(canvas,coords,active,target):
         canvas.itemconfig(target, fill='green')
         return True
 
-def main(sval1,sval2,my_w,name, inch, amp, targetWidth ,fileName, cursorVisible):
+def main(sval1,sval2,my_w,name, inch, amp, targetWidth ,fileName, cursorVisible, interT):
     workbook = xlsxwriter.Workbook(fileName)
     outSheet = workbook.add_worksheet()
     my_w_child=Toplevel(my_w) # Child window
@@ -230,7 +230,7 @@ def main(sval1,sval2,my_w,name, inch, amp, targetWidth ,fileName, cursorVisible)
             y0 = y - r
             x1 = x2 + r
             y1 = y + r
-            cursorOval = myCanvas.create_oval(x0, y0, x1, y1)
+            
            
             # center start position
             start_center_move = myCanvas.create_rectangle(int(window_center_x - 25),
@@ -240,7 +240,7 @@ def main(sval1,sval2,my_w,name, inch, amp, targetWidth ,fileName, cursorVisible)
                                  outline="black",
                                  fill="red")
            
-           
+            cursorOval = myCanvas.create_oval(x0, y0, x1, y1)
            
             start_check_move = cursor_collision(myCanvas,myCanvas.coords(start_center_move),2,start_center_move)
            
@@ -248,9 +248,13 @@ def main(sval1,sval2,my_w,name, inch, amp, targetWidth ,fileName, cursorVisible)
            
             if not start_check_move:
                 start_counter = 0
+                oldtime = time.time()
             else:
-                start_counter = start_counter + 1
-                if start_counter >= 10:
+                
+                elapsed = time.time() - oldtime
+                start_counter = interT - int(elapsed)
+                if elapsed >= interT:
+                    print(elapsed)
                     has_been_to_start = True
                     start_counter = 0
                     # choose_rect = random.uniform(0, 1)

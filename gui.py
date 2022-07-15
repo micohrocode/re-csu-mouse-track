@@ -16,6 +16,7 @@ def mainCV():
     lowerX = int(lowerXE.get())
     upperX = int(upperXE.get())
     subCode = pidE.get()
+    interT = float(interTrialE.get())
     x0, y0, x1, y1 = canvas.coords(rectangle) 
     inch = x1-x0
     targetWidth = float(twEntry.get())
@@ -26,7 +27,7 @@ def mainCV():
         cursor = 1
     if fileCheck == 0 or len(fileName) == 0:
         fileName = 'data.xlsx'
-    main(lowerX,upperX, root, subCode,inch, amplitude, targetWidth, fileName, cursor)
+    main(lowerX,upperX, root, subCode,inch, amplitude, targetWidth, fileName, cursor, interT)
     
 def width(e):
     x0, y0, x1, y1 = canvas.coords(rectangle) 
