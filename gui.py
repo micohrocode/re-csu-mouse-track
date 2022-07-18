@@ -42,7 +42,7 @@ def browseFiles():
     fileCheck = 1
         
 hsv = Image.open("hsv.png")
-test = hsv.resize((600, 300))
+test = hsv.resize((500, 200))
 test = ImageTk.PhotoImage(test)
 imglabel = Label(image=test)
 imglabel.image = test
@@ -61,14 +61,14 @@ upperXE.grid(row = 8, column = 1,  pady= (0,15))
  
 
 
-slider = Scale(root, from_=10 , to=150, orient = HORIZONTAL, bg="white", length = 800,command = width, trough = "black")
-slider.grid(row=1, column = 4)
-canvas = Canvas(root,height=50,width=800)
-canvas.grid(row = 2, column = 4)
+slider = Scale(root, from_=10 , to=100, orient = HORIZONTAL, bg="white", length = 500,command = width, trough = "black")
+slider.grid(row=1, column = 3)
+canvas = Canvas(root,height=50,width=600)
+canvas.grid(row = 2, column = 3)
 info = Label(root, text = "Adust the Slider untill the rectangle measures an INCH in length (use a ruler).\nRemember this number, it will be the same for your computer.")
-info.grid(row = 0, column= 4)
+info.grid(row = 0, column= 3)
 
-rectangle =  canvas.create_rectangle(5,50, 25,3*sl_value, fill="black")
+rectangle =  canvas.create_rectangle(0,50, 25,3*sl_value, fill="black")
 
 warning = Label(root, text ="The sum of Target Width + Amplitude must be less than the screen's width." )
 warning.grid(row = 9, columnspan = 3)
@@ -121,6 +121,6 @@ fileName.grid(row = 18, column = 1)
 
 
 submit = Button(root, text ="Submit", command = mainCV)
-submit.grid(column=5)
+submit.grid(row =18, column=5)
 
 root.mainloop()

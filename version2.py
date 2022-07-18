@@ -150,7 +150,7 @@ def main(sval1,sval2,my_w,name, inch, amp, targetWidth ,fileName, cursorVisible,
     choose_rect = random.uniform(0, 1)
 
     # external
-    video = cv2.VideoCapture(1, cv2.CAP_DSHOW)
+    video = cv2.VideoCapture(0, cv2.CAP_DSHOW)
     # build in
     # video = cv2.VideoCapture(0)
    
@@ -352,13 +352,13 @@ def main(sval1,sval2,my_w,name, inch, amp, targetWidth ,fileName, cursorVisible,
                             continue
                        
                         status = "still"
-                # outSheet.write(cell, 0, x2)
-                # outSheet.write(cell, 1, y)
-                # cell = cell + 1
+
             else:
-                cv2.putText(frame,'Place in center: ' + str(start_counter),(100,100),cv2.FONT_HERSHEY_SIMPLEX,1,(0,0,255),2)
-            cv2.imshow('Tracking',frame)
-            cv2.setWindowProperty("Tracking", cv2.WND_PROP_TOPMOST, 1)
+                timer = ("%d" % (str(start_counter)))
+                countdown = Label(root, text = timer)
+            #    cv2.putText(frame,'Place in center: ' + str(start_counter),(100,100),cv2.FONT_HERSHEY_SIMPLEX,1,(0,0,255),2)
+            #cv2.imshow('Tracking',frame)
+            #cv2.setWindowProperty("Tracking", cv2.WND_PROP_TOPMOST, 1)
             if cv2.waitKey(20) & 0xFF==ord('p'):
                break
             counter = counter + 1
