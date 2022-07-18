@@ -150,7 +150,7 @@ def main(sval1,sval2,my_w,name, inch, amp, targetWidth ,fileName, cursorVisible,
     choose_rect = random.uniform(0, 1)
 
     # external
-    video = cv2.VideoCapture(1, cv2.CAP_DSHOW)
+    video = cv2.VideoCapture(0, cv2.CAP_DSHOW)
     # build in
     # video = cv2.VideoCapture(0)
    
@@ -168,6 +168,7 @@ def main(sval1,sval2,my_w,name, inch, amp, targetWidth ,fileName, cursorVisible,
     pixel_vel_thresh = math.ceil(math.ceil((inch/25.4) * 30) / 60)
     print('Vel pixel thresh: '+str(pixel_vel_thresh))
    
+    oldTimeCheck = 0
     time.sleep(5)
     cell = 1
     while True:
@@ -250,9 +251,13 @@ def main(sval1,sval2,my_w,name, inch, amp, targetWidth ,fileName, cursorVisible,
            
             if not start_check_move:
                 start_counter = 0
+                oldTimeCheck = 1
                 oldtime = time.time()
-            else:
                 
+            else:
+                if oldTimeCheck == 0:
+                    oldtime = time.time()
+                    oldTimeCheck = 1
                 elapsed = time.time() - oldtime
                 start_counter = interT - int(elapsed)
                 if elapsed >= interT:
