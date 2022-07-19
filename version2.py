@@ -50,8 +50,8 @@ def calibrate(frame,sizeMM,l_b,u_b):
    
     # value to convert pixels to millimeters
     pixelPerMM = w/sizeMM
-   
     return pixelPerMM
+
 def draw_rectangle(canvas,x_center,y_center,window_w,window_h,height,side, inch, amp, targetWidth, showing):
    
     halfWidth = targetWidth/2 * inch
@@ -67,7 +67,6 @@ def draw_rectangle(canvas,x_center,y_center,window_w,window_h,height,side, inch,
         outline="#fb0",
         fill="#fb0",
         state=showing)
-
     elif side == 'left':
         return canvas.create_rectangle(
         int(x_center -(halfAmp - halfWidth)),
@@ -94,6 +93,7 @@ def main(sval1,sval2,my_w,name, inch, amp, targetWidth ,fileName, cursorVisible,
     outR = 0
     outL = 0
     # variables above see if rectangles r out
+
     workbook = xlsxwriter.Workbook(fileName)
     outSheet = workbook.add_worksheet()
     my_w_child=Toplevel(my_w) # Child window
@@ -102,18 +102,13 @@ def main(sval1,sval2,my_w,name, inch, amp, targetWidth ,fileName, cursorVisible,
     window_height= my_w_child.winfo_screenheight()              
     my_w_child.geometry("%dx%d" % (window_width,  window_height))
    
-    my_w_child.title("Cursor Test")
+    my_w_child.title("Trial")
     myCanvas = Canvas(my_w_child,height=window_height,width=window_width)
     myCanvas.pack()
-   
-    
    
     l_b=np.array([sval1,0,20])# lower hsv bound for orange
     u_b=np.array([sval2,255,255])# upper hsv bound to orange
    
-    #counter for tracking every number of frames
-    counter = 0
-
     # movement graphs
     fig, ax1 = plt.subplots()
 
@@ -145,18 +140,13 @@ def main(sval1,sval2,my_w,name, inch, amp, targetWidth ,fileName, cursorVisible,
     start_counter = 0
    
     numTrials = 0
-    
-    # check if rect should change
-    # free_to_switch = True
    
     # rect to start with
     choose_rect = random.uniform(0, 1)
 
     # external
     video = cv2.VideoCapture(0, cv2.CAP_DSHOW)
-    # build in
-    # video = cv2.VideoCapture(0)
-   
+
     # value to convert pixel distance to millimeters check
     pixelToMM = False
    
@@ -173,17 +163,7 @@ def main(sval1,sval2,my_w,name, inch, amp, targetWidth ,fileName, cursorVisible,
     oldTimeCheck = 0
     time.sleep(5)
     cell = 1
-    while True:
-        _, frame=video.read()
-       
-        bbox,err  = detect(frame,l_b,u_b)
-        if err:
-            continue
-        else:
-            break
-        frame = cv2.flip(frame, -1)
    
-    tracker.init(frame,bbox)
      # find center point
     window_center_x = window_width / 2
     window_center_y = window_height / 2
@@ -191,23 +171,20 @@ def main(sval1,sval2,my_w,name, inch, amp, targetWidth ,fileName, cursorVisible,
     while True:
         if numTrials == numT:
             break
-        if counter == 1:
-            while True:
-                _, frame=video.read()
-                frame = cv2.flip(frame, -1)
-   
-                bbox,err  = detect(frame,l_b,u_b)
-                if err:
-                    continue
-                else:
-                    break
-            tracker = cv2.TrackerCSRT_create()
-            tracker.init(frame,bbox)
-            counter = 0
+        
+        while True:
+            _, frame=video.read()
+            frame = cv2.flip(frame, -1)
+            bbox,err  = detect(frame,l_b,u_b)
+            if err:
+                continue
+            else:
+                break
+        tracker = cv2.TrackerCSRT_create()
+        tracker.init(frame,bbox)
    
         _, frame=video.read()
         frame = cv2.flip(frame, -1)
-   
         ok,bbox=tracker.update(frame)
         
         # cursor location
@@ -223,8 +200,6 @@ def main(sval1,sval2,my_w,name, inch, amp, targetWidth ,fileName, cursorVisible,
         
         # clear canvas for updating
         myCanvas.delete(ALL)
-        
-        
         
         # rectangle area drawing
         if outR == 1:
@@ -254,10 +229,10 @@ def main(sval1,sval2,my_w,name, inch, amp, targetWidth ,fileName, cursorVisible,
         cursorOval = myCanvas.create_oval(x0, y0, x1, y1)
         if outR == 0 and outL == 0:
             if start_counter == 0:
-                myCanvas.create_text(300, 50, text="Go to Center", fill="black", font=('Helvetica 30 bold'))
+                myCanvas.create_text(300, 50, text="Go to Center", fill="black", font=('Rockwell 30 bold'))
             else:
                 countdown = "Stay Still for " + str(start_counter) + " Seconds"
-                myCanvas.create_text(300, 50, text=countdown, fill="black", font=('Helvetica 30 bold'))
+                myCanvas.create_text(300, 50, text=countdown, fill="black", font=('Rockwell 30 bold'))
 
 
         start_check_move = cursor_collision(myCanvas,myCanvas.coords(start_center_move),2,start_center_move)
@@ -280,13 +255,11 @@ def main(sval1,sval2,my_w,name, inch, amp, targetWidth ,fileName, cursorVisible,
                     has_been_to_start = True
                     start_counter = 0
                     oldTimeCheck = 0
-                    # choose_rect = random.uniform(0, 1)
-                        
+
         # # after they are in the start for long enough check if they leave the start to start move?
         in_center  = cursor_collision(myCanvas,myCanvas.coords(start_center_move),2,start_center_move)
             
         if has_been_to_start:
-            
             if cursorVisible == 0:
                 myCanvas.itemconfigure(cursorOval, state = 'hidden')
 
@@ -376,14 +349,14 @@ def main(sval1,sval2,my_w,name, inch, amp, targetWidth ,fileName, cursorVisible,
                         continue
                     
                     status = "still"
-
+        #get rid of this section eventully
         else:
             cv2.putText(frame,'Place in center: ' + str(start_counter),(100,100),cv2.FONT_HERSHEY_SIMPLEX,1,(0,0,255),2)
         cv2.imshow('Tracking',frame)
         cv2.setWindowProperty("Tracking", cv2.WND_PROP_TOPMOST, 1)
         if cv2.waitKey(20) & 0xFF==ord('p'):
             break
-        counter = counter + 1
+ 
    
     for x in range(len(movements)):
         # start point to end point line
