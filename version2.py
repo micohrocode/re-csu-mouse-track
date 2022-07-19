@@ -77,23 +77,22 @@ def draw_rectangle(canvas,x_center,y_center,window_w,window_h,height,side, inch,
         fill="#fb0",
         state=showing)
 
-   
-def cursor_collision(canvas,coords,active,target):
-    coll = canvas.find_overlapping(coords[0],
-                         coords[1],
-                         coords[2],
-                         coords[3])
-   
-    coll = list(coll)
-    if len(coll) >= active:
+
+def cursor_collision(canvas,target,oval):
+    xo, yo, xo2, yo2 = canvas.coords(oval)
+    x1sr, y1sr, x2sr, y2sr = canvas.coords(target)
+    if xo >= x1sr and yo >= y1sr and xo2 <= x2sr and yo2 <= y2sr:
         canvas.itemconfig(target, fill='green')
         return True
+
 
 def main(sval1,sval2,my_w,name, inch, amp, targetWidth ,fileName, cursorVisible, interT, numT):
     outR = 0
     outL = 0
     # variables above see if rectangles r out
 
+    start_check_move = False
+    in_center = False
     workbook = xlsxwriter.Workbook(fileName)
     outSheet = workbook.add_worksheet()
     my_w_child=Toplevel(my_w) # Child window
@@ -226,7 +225,16 @@ def main(sval1,sval2,my_w,name, inch, amp, targetWidth ,fileName, cursorVisible,
                                 outline="black",
                                 fill="red")
         
-        cursorOval = myCanvas.create_oval(x0, y0, x1, y1)
+        if outR == 0 and outL == 0:
+            cursorOval = myCanvas.create_oval(x0, y0, x1, y1)
+        else:
+            if cursorVisible:
+                cursorOval = myCanvas.create_oval(x0, y0, x1, y1)
+            else:
+                cursorOval = myCanvas.create_oval(x0, y0, x1, y1, state = 'hidden')
+
+
+
         if outR == 0 and outL == 0:
             if start_counter == 0:
                 myCanvas.create_text(300, 50, text="Go to Center", fill="black", font=('Rockwell 30 bold'))
@@ -235,8 +243,8 @@ def main(sval1,sval2,my_w,name, inch, amp, targetWidth ,fileName, cursorVisible,
                 myCanvas.create_text(300, 50, text=countdown, fill="black", font=('Rockwell 30 bold'))
 
 
-        start_check_move = cursor_collision(myCanvas,myCanvas.coords(start_center_move),2,start_center_move)
-        
+        start_check_move= cursor_collision(myCanvas,start_center_move, cursorOval)
+        in_center = start_check_move
         my_w_child.update()
         
         if not start_check_move:
@@ -251,14 +259,11 @@ def main(sval1,sval2,my_w,name, inch, amp, targetWidth ,fileName, cursorVisible,
                 elapsed = time.time() - oldtime
                 start_counter = interT - int(elapsed)
                 if elapsed >= interT:
-                   #print(elapsed)
+                    print(elapsed)
                     has_been_to_start = True
                     start_counter = 0
                     oldTimeCheck = 0
 
-        # # after they are in the start for long enough check if they leave the start to start move?
-        in_center  = cursor_collision(myCanvas,myCanvas.coords(start_center_move),2,start_center_move)
-            
         if has_been_to_start:
             if cursorVisible == 0:
                 myCanvas.itemconfigure(cursorOval, state = 'hidden')
@@ -317,7 +322,6 @@ def main(sval1,sval2,my_w,name, inch, amp, targetWidth ,fileName, cursorVisible,
                         # stopping point to target?
                         hit_or_miss = 'miss'
                         target_center = None
-                        
                         x1o, y1o, x2o, y2o = myCanvas.coords(cursorOval)
                         if choose_rect >= .5:
                             x1r, y1r, x2r, y2r = myCanvas.coords(rectangleR)
