@@ -86,7 +86,7 @@ def cursor_collision(canvas,target,oval):
         return True
 
 
-def main(sval1,sval2,my_w,name, inch, amp, targetWidth ,fileName, cursorVisible, interT, numT):
+def main(sval1,sval2,svalY1, svalY2, my_w,name, inch, amp, targetWidth ,fileName, cursorVisible, interT, numT, camera):
     outR = 0
     outL = 0
     # variables above see if rectangles r out
@@ -105,8 +105,8 @@ def main(sval1,sval2,my_w,name, inch, amp, targetWidth ,fileName, cursorVisible,
     myCanvas = Canvas(my_w_child,height=window_height,width=window_width)
     myCanvas.pack()
    
-    l_b=np.array([sval1,0,20])# lower hsv bound for orange
-    u_b=np.array([sval2,255,255])# upper hsv bound to orange
+    l_b=np.array([sval1,svalY1,20])# lower hsv bound for orange
+    u_b=np.array([sval2,svalY2,255])# upper hsv bound to orange
    
     # movement graphs
     fig, ax1 = plt.subplots()
@@ -144,7 +144,7 @@ def main(sval1,sval2,my_w,name, inch, amp, targetWidth ,fileName, cursorVisible,
     choose_rect = random.uniform(0, 1)
 
     # external
-    video = cv2.VideoCapture(0, cv2.CAP_DSHOW)
+    video = cv2.VideoCapture(camera, cv2.CAP_DSHOW)
 
     # value to convert pixel distance to millimeters check
     pixelToMM = False
@@ -402,6 +402,7 @@ def main(sval1,sval2,my_w,name, inch, amp, targetWidth ,fileName, cursorVisible,
         outSheet.write(i+1,1,str(movements[i][1]))
         outSheet.write(i+1,2,str(movements[i][2]))
         outSheet.write(i+1,3,str(movements[i][3]))
+        
         outSheet.write(i+1,4,str(movements[i][4]))
         outSheet.write(i+1,5,str(movements[i][5]))
         outSheet.write(i+1,6,str(movements[i][6]))
