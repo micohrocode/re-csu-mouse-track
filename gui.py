@@ -1,7 +1,9 @@
 from tkinter import *
 from version2 import *
+import numpy as np
 from PIL import Image, ImageTk
 from tkinter import filedialog
+import cv2
 
 root = Tk()
 root.title('Data Acquistion')
@@ -11,6 +13,20 @@ window_height= root.winfo_screenheight()
 root.geometry("%dx%d" % (window_width,  window_height))
 global fileCheck
 fileCheck = 0 
+def testCamera():
+    video = cv2.VideoCapture(0, cv2.CAP_DSHOW)
+    l_b=np.array([int(lowerXE.get()),0,20])
+    u_b=np.array([int(upperXE.get()),255,255])
+    _, frame=video.read()
+    hsv=cv2.cvtColor(frame,cv2.COLOR_BGR2HSV)
+    mask=cv2.inRange(hsv,l_b,u_b)
+    _, mask = cv2.threshold(mask, 254, 255, cv2.THRESH_BINARY)
+    cv2.imshow("mask", mask)
+
+
+   
+   
+
 def mainCV():
     cursor = 0
     lowerX = int(lowerXE.get())
@@ -50,6 +66,8 @@ imglabel.grid(column = 0, columnspan=3, rowspan = 3, padx = (0,30))
 
 lowerX = Label(root, text = "Lower X Bound:")
 upperX = Label(root, text = "Upper Y Bound:")
+testColor = Button(root, text = "Test Color",command = testCamera)
+testColor.grid(row = 8, column = 2)
 example = Label(root, text = "Example for Green: Lower = 50, Upper = 60")
 example.grid(row = 6, column = 0)
 lowerX.grid(row = 7, column = 0)
