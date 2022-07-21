@@ -56,22 +56,22 @@ def draw_rectangle(canvas,x_center,y_center,window_w,window_h,height,side, inch,
    
     halfWidth = targetWidth/2 * inch
     amp = amp * inch
-    halfAmp = amp/2
+    
 
     if side == 'right':
         return canvas.create_rectangle(
-        int(x_center +(halfAmp - halfWidth)),
+        int(x_center +(amp - halfWidth)),
         int(y_center +(window_h*height)),
-        int(x_center +(halfAmp + halfWidth)),
+        int(x_center +(amp + halfWidth)),
         int(y_center -(window_h*height)),
         outline="#fb0",
         fill="#fb0",
         state=showing)
     elif side == 'left':
         return canvas.create_rectangle(
-        int(x_center -(halfAmp - halfWidth)),
+        int(x_center -(amp - halfWidth)),
         int(y_center +(window_h*height)),
-        int(x_center -(halfAmp + halfWidth)),
+        int(x_center -(amp + halfWidth)),
         int(y_center -(window_h*height)),
         outline="#fb0",
         fill="#fb0",
