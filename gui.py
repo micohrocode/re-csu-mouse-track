@@ -41,11 +41,12 @@ def mainCV():
     numT = int(numTrialsE.get())
     fileName = fileOpen.cget("text")
     cursorVisible = (clicked.get())   
+    itemWidth = int(calibItemE.get())
     if cursorVisible.__eq__('Always Visible'):
         cursor = 1
     if fileCheck == 0 or len(fileName) == 0:
         fileName = 'data.xlsx'
-    main(lowerX,upperX, lowerY, upperY, root, subCode,inch, amplitude, targetWidth, fileName, cursor, interT, numT, camera)
+    main(lowerX,upperX, lowerY, upperY, root, subCode,inch, amplitude, targetWidth, fileName, cursor, interT, numT, camera, itemWidth)
     
 def width(e):
     x0, y0, x1, y1 = canvas.coords(rectangle) 

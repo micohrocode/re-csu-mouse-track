@@ -37,6 +37,7 @@ def detect(frame,l_b,u_b):
     return (x,y,w,h), False
 
 def calibrate(frame,sizeMM,l_b,u_b):
+    sizeMM = sizeMM * 25.4
     frame,mask = frameToColorMask(frame,l_b,u_b)
     areas, contours = contourAreas(mask)
    
@@ -86,7 +87,7 @@ def cursor_collision(canvas,target,oval):
         return True
 
 
-def main(sval1,sval2,svalY1, svalY2, my_w,name, inch, amp, targetWidth ,fileName, cursorVisible, interT, numT, camera):
+def main(sval1,sval2,svalY1, svalY2, my_w,name, inch, amp, targetWidth ,fileName, cursorVisible, interT, numT, camera, itemWidth):
     outR = 0
     outL = 0
     # variables above see if rectangles r out
@@ -152,7 +153,7 @@ def main(sval1,sval2,svalY1, svalY2, my_w,name, inch, amp, targetWidth ,fileName
     # continue until a value to convert is found
     while not pixelToMM:
         _, frame=video.read()
-        pixelToMM = calibrate(frame, 76.2,l_b,u_b)
+        pixelToMM = calibrate(frame, itemWidth ,l_b,u_b)
        
     print('Pixels per mm: '+ str(pixelToMM))
    
