@@ -1,10 +1,12 @@
 from optparse import Option
 from tkinter import *
 from version2 import *
+from datetime import datetime
 import numpy as np
 from PIL import Image, ImageTk
 from tkinter import filedialog
 import cv2
+import re
 
 root = Tk()
 root.title('Data Acquistion')
@@ -45,7 +47,9 @@ def mainCV():
     if cursorVisible.__eq__('Always Visible'):
         cursor = 1
     if fileCheck == 0 or len(fileName) == 0:
-        fileName = 'data.xlsx'
+        time_add = re.split('\-|\:| |\.',str(datetime.now()))
+        time_add = "_".join(time_add)
+        fileName = 'data_'+time_add+'.xlsx'
     main(lowerX,upperX, lowerY, upperY, root, subCode,inch, amplitude, targetWidth, fileName, cursor, interT, numT, camera, itemWidth)
     
 def width(e):
