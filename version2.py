@@ -340,7 +340,13 @@ def main(sval1,sval2,svalY1, svalY2, my_w,name, inch, amp, targetWidth ,fileName
                         
                         end = (x2,y)
                         end_time = datetime.now()
-                        movements.append([start,end,math.dist(start, end),(end_time - start_time),move_portions,start_time, math.dist(start, end)/pixelToMM,hit_or_miss,target_center,math.dist(end, target_center)])
+                        excel_side = None
+                        if outR:
+                            print('right')
+                            excel_side = 'right'
+                        elif outL:
+                            excel_side = 'left'
+                        movements.append([start,end,math.dist(start, end),(end_time - start_time),move_portions,start_time, math.dist(start, end)/pixelToMM,hit_or_miss,target_center,math.dist(end, target_center),excel_side])
                         move_portions = []
                         start_time = None
                         # start new test at the end of each move
@@ -393,6 +399,7 @@ def main(sval1,sval2,svalY1, svalY2, my_w,name, inch, amp, targetWidth ,fileName
     outSheet.write("H1","Target Hit")
     outSheet.write("I1","Target Center")
     outSheet.write("J1","Distance From Center")
+    outSheet.write("K1","Side")
    
     excel_place = 0
    
@@ -424,6 +431,7 @@ def main(sval1,sval2,svalY1, svalY2, my_w,name, inch, amp, targetWidth ,fileName
         outSheet.write(hold_place+1,5,str(movements[i][7]))
         outSheet.write(hold_place+1,6,str(movements[i][8]))
         outSheet.write(hold_place+1,7,str(movements[i][9]))
+        outSheet.write(hold_place+1,8,str(movements[i][10]))
         
         outSheet.write(hold_place+3,0,'Trial')
         outSheet.write(hold_place+3,1,'Start')
@@ -467,7 +475,7 @@ def main(sval1,sval2,svalY1, svalY2, my_w,name, inch, amp, targetWidth ,fileName
                 outSheet.write(hold_place+j+4,6,str(movements[i][4][j][4]))
             excel_place = excel_place + 1
             
-        excel_place = excel_place + len(movements[i][4])
+        excel_place = excel_place + len(movements[i][4][j])
 
     outSheet.write(excel_place+1, 0, "Subject Code:")
     outSheet.write(excel_place+1, 1, name)
