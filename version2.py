@@ -260,7 +260,6 @@ def main(sval1,sval2,svalY1, svalY2, my_w,name, inch, amp, targetWidth ,fileName
                 elapsed = time.time() - oldtime
                 start_counter = interT - int(elapsed)
                 if elapsed >= interT:
-                    print(elapsed)
                     has_been_to_start = True
                     start_counter = 0
                     oldTimeCheck = 0
@@ -343,7 +342,6 @@ def main(sval1,sval2,svalY1, svalY2, my_w,name, inch, amp, targetWidth ,fileName
                         end_time = datetime.now()
                         excel_side = None
                         if outR:
-                            print('right')
                             excel_side = 'right'
                         elif outL:
                             excel_side = 'left'
@@ -390,38 +388,34 @@ def main(sval1,sval2,svalY1, svalY2, my_w,name, inch, amp, targetWidth ,fileName
             plt.plot(movements[x][4][y][0], movements[x][4][y][1], marker = 'o',color='k')
      
     # excel sheet organization
-    outSheet.write("A1","Start")
-    outSheet.write("B1","End")
-    outSheet.write("C1","Distance")
-    outSheet.write("D1","Total Time")
-    outSheet.write("E1","Moves")
-    outSheet.write("F1","Time Of")
-    outSheet.write("G1","MM Traveled")
-    outSheet.write("H1","Target Hit")
-    outSheet.write("I1","Target Center")
-    outSheet.write("J1","Distance From Center")
-    outSheet.write("K1","Side")
+    outSheet.write("A1","Target Width: " + str(targetWidth))
+    outSheet.write("B1","Amplitude: " + str(amp))
+    outSheet.write("C1","Intertrial Interval: " + str(interT))
+    outSheet.write("D1","# of Trials: " + str(numT))
+    if cursorVisible:
+        outSheet.write("E1","Cursor Visible: Yes")
+    else:
+        outSheet.write("E1","Cursor Visible: No")
+
+    outSheet.write("A3","Start")
+    outSheet.write("B3","End")
+    outSheet.write("C3","Distance")
+    outSheet.write("D3","Total Time")
+    outSheet.write("E3","Moves")
+    outSheet.write("F3","Time Of")
+    outSheet.write("G3","MM Traveled")
+    outSheet.write("H3","Target Hit")
+    outSheet.write("I3","Target Center")
+    outSheet.write("J3","Distance From Center")
+    outSheet.write("K3","Side")
    
-    excel_place = 0
+   
+    excel_place = 3
    
     # look at how to display movement data
     for i in range(len(movements)):
         hold_place = i + excel_place
-# =============================================================================
-#         outSheet.write(i+1,0,str(movements[i][0]))
-#         outSheet.write(i+1,1,str(movements[i][1]))
-#         outSheet.write(i+1,2,str(movements[i][2]))
-#         outSheet.write(i+1,3,str(movements[i][3]))
-#         
-#         # moves here
-#         outSheet.write(i+1,4,str(movements[i][4]))
-#         
-#         outSheet.write(i+1,5,str(movements[i][5]))
-#         outSheet.write(i+1,6,str(movements[i][6]))
-#         outSheet.write(i+1,7,str(movements[i][7]))
-#         outSheet.write(i+1,8,str(movements[i][8]))
-#         outSheet.write(i+1,9,str(movements[i][9]))
-# =============================================================================
+
 
         # testing new output
         outSheet.write(hold_place+1,0,str(i))
@@ -444,7 +438,6 @@ def main(sval1,sval2,svalY1, svalY2, my_w,name, inch, amp, targetWidth ,fileName
         
         # movements
         for j in range(len(movements[i][4])):
-            print(movements[i][4][j])
             if (len(movements[i][4][j]))<=4 :
                 # trial
                 outSheet.write(hold_place+j+4,0,str(i))
