@@ -402,13 +402,15 @@ def main(sval1,sval2,svalY1, svalY2, my_w,name, inch, amp, targetWidth ,fileName
     outSheet.write("C3","End")
     outSheet.write("D3","Distance")
     outSheet.write("E3","Total Time")
-    outSheet.write("F3","Moves")
-    outSheet.write("G3","Time Of")
-    outSheet.write("H3","MM Traveled")
-    outSheet.write("I3","Target Hit")
-    outSheet.write("J3","Target Center")
-    outSheet.write("K3","Distance From Center")
-    outSheet.write("L3","Side")
+# =============================================================================
+#     outSheet.write("F3","Moves")
+#     outSheet.write("G3","Time Of")
+#     outSheet.write("H3","MM Traveled")
+# =============================================================================
+    outSheet.write("F3","Target Hit")
+    outSheet.write("G3","Target Center")
+    outSheet.write("H3","Distance From Center")
+    outSheet.write("I3","Side")
    
    
     excel_place = 3
