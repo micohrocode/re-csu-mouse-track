@@ -345,7 +345,7 @@ def main(sval1,sval2,svalY1, svalY2, my_w,name, inch, amp, targetWidth ,fileName
                             excel_side = 'right'
                         elif outL:
                             excel_side = 'left'
-                        movements.append([start,end,math.dist(start, end),(end_time - start_time),move_portions,start_time, math.dist(start, end)/pixelToMM,hit_or_miss,target_center,math.dist(end, target_center),excel_side])
+                        movements.append([start,end,math.dist(start, end)/pixelToMM/25.4,(end_time - start_time),move_portions,start_time, math.dist(start, end)/pixelToMM,hit_or_miss,target_center,math.dist(end, target_center),excel_side])
                         move_portions = []
                         start_time = None
                         # start new test at the end of each move
@@ -376,11 +376,11 @@ def main(sval1,sval2,svalY1, svalY2, my_w,name, inch, amp, targetWidth ,fileName
         for y in range(len(movements[x][4])):
             if y == 0:
                 # velocity
-                velocity = (math.dist((movements[x][4][y][0],movements[x][4][y][1]),start))/(movements[x][4][y][2].microseconds*0.000001) / pixelToMM
+                velocity = (math.dist((movements[x][4][y][0],movements[x][4][y][1]),start))/(movements[x][4][y][2].microseconds*0.000001) / pixelToMM / 25.4
                 movements[x][4][y].append(velocity)
             else:
                 # velocity
-                velocity = (math.dist((movements[x][4][y][0],movements[x][4][y][1]),(movements[x][4][y-1][0],movements[x][4][y-1][1])))/(movements[x][4][y][2].microseconds*0.000001) / pixelToMM
+                velocity = (math.dist((movements[x][4][y][0],movements[x][4][y][1]),(movements[x][4][y-1][0],movements[x][4][y-1][1])))/(movements[x][4][y][2].microseconds*0.000001) / pixelToMM / 25.4
                 movements[x][4][y].append(velocity)
                 # acceleration
                 accerlation = ((velocity - movements[x][4][y-1][3])/(movements[x][4][y][2].microseconds*0.000001))
@@ -397,17 +397,18 @@ def main(sval1,sval2,svalY1, svalY2, my_w,name, inch, amp, targetWidth ,fileName
     else:
         outSheet.write("E1","Cursor Visible: No")
 
-    outSheet.write("A3","Start")
-    outSheet.write("B3","End")
-    outSheet.write("C3","Distance")
-    outSheet.write("D3","Total Time")
-    outSheet.write("E3","Moves")
-    outSheet.write("F3","Time Of")
-    outSheet.write("G3","MM Traveled")
-    outSheet.write("H3","Target Hit")
-    outSheet.write("I3","Target Center")
-    outSheet.write("J3","Distance From Center")
-    outSheet.write("K3","Side")
+    outSheet.write("A3","Trial")
+    outSheet.write("B3","Start")
+    outSheet.write("C3","End")
+    outSheet.write("D3","Distance")
+    outSheet.write("E3","Total Time")
+    outSheet.write("F3","Moves")
+    outSheet.write("G3","Time Of")
+    outSheet.write("H3","MM Traveled")
+    outSheet.write("I3","Target Hit")
+    outSheet.write("J3","Target Center")
+    outSheet.write("K3","Distance From Center")
+    outSheet.write("L3","Side")
    
    
     excel_place = 3
@@ -446,7 +447,7 @@ def main(sval1,sval2,svalY1, svalY2, my_w,name, inch, amp, targetWidth ,fileName
                 # end
                 outSheet.write(hold_place+j+4,2,str((movements[i][4][j][0],movements[i][4][j][1])))
                 # dist
-                outSheet.write(hold_place+j+4,3,str(math.dist(movements[i][0],(movements[i][4][j][0],movements[i][4][j][1]))))
+                outSheet.write(hold_place+j+4,3,str(math.dist(movements[i][0],(movements[i][4][j][0],movements[i][4][j][1]))/pixelToMM/25.4))
                 # time
                 outSheet.write(hold_place+j+4,4,str(movements[i][5]+movements[i][4][j][2]))
                 # vel
@@ -459,8 +460,7 @@ def main(sval1,sval2,svalY1, svalY2, my_w,name, inch, amp, targetWidth ,fileName
                 # end
                 outSheet.write(hold_place+j+4,2,str((movements[i][4][j][0],movements[i][4][j][1])))
                 # dist
-                outSheet.write(hold_place+j+4,3,str(math.dist((movements[i][4][j-1][0],movements[i][4][j-1][1]),(movements[i][4][j][0],movements[i][4][j][1]))))
-                # time
+                outSheet.write(hold_place+j+4,3,str(math.dist((movements[i][4][j-1][0],movements[i][4][j-1][1]),(movements[i][4][j][0],movements[i][4][j][1]))/pixelToMM/25.4))
                 # time
                 outSheet.write(hold_place+j+4,4,str(movements[i][5]+movements[i][4][j][2]))
                 # vel
