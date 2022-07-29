@@ -451,7 +451,7 @@ def main(sval1,sval2,svalY1, svalY2, my_w,name, inch, amp, targetWidth ,fileName
                 # dist
                 outSheet.write(hold_place+j+4,3,str(math.dist(movements[i][0],(movements[i][4][j][0],movements[i][4][j][1]))/pixelToMM/25.4))
                 # time
-                outSheet.write(hold_place+j+4,4,str(movements[i][5]+movements[i][4][j][2]))
+                outSheet.write(hold_place+j+4,4,str(movements[i][4][j][2]))
                 # vel
                 outSheet.write(hold_place+j+4,5,str(movements[i][4][j][3]))
             else:
@@ -464,7 +464,7 @@ def main(sval1,sval2,svalY1, svalY2, my_w,name, inch, amp, targetWidth ,fileName
                 # dist
                 outSheet.write(hold_place+j+4,3,str(math.dist((movements[i][4][j-1][0],movements[i][4][j-1][1]),(movements[i][4][j][0],movements[i][4][j][1]))/pixelToMM/25.4))
                 # time
-                outSheet.write(hold_place+j+4,4,str(movements[i][5]+movements[i][4][j][2]))
+                outSheet.write(hold_place+j+4,4,str(movements[i][4][j][2]))
                 # vel
                 outSheet.write(hold_place+j+4,5,str(movements[i][4][j][3]))
                 # accel
