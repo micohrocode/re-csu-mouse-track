@@ -112,7 +112,7 @@ info.grid(row = 0, column= 3,  columnspan=3)
 
 rectangle =  canvas.create_rectangle(0,50, 25,3*sl_value, fill="black")
 
-warning = Label(root, text ="The sum of Target Width + Amplitude must be less than the screen's width." )
+warning = Label(root, text ="The sum of Target Width + Amplitude must be less than half the screen's width." )
 warning.grid(row = 12, column = 0, columnspan = 2)
 targwidth = Label(root, text = "Target Width (in): ")
 amp = Label(root, text = "Amplitude (in): ")
